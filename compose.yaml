@@ -1,0 +1,55 @@
+# EcoQuest: servicio de inferencia (SigLIP2) + web, para probar el despliegue en local.
+#   docker compose up --build        (web en http://localhost:3000, API en http://localhost:8000)
+# Los límites de memoria/CPU son los mínimos medidos con la imagen de inferencia (ver README);
+# ajústalos con INFERENCE_MEM / INFERENCE_CPUS según el servidor.
+#
+# NEXT_PUBLIC_API_URL se incorpora al JavaScript de la web al construir la imagen, y el navegador
+# llama a esa URL directamente: debe ser la URL pública de la API, no el nombre interno del servicio.
+
+services:
+  inference:
+    build: ./inference
+    image: ecoquest-inference:0.1.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-30}
+      TRUST_PROXY: ${TRUST_PROXY:-false}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/health', timeout=4)"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: ${INFERENCE_MEM:-1536m}
+          cpus: ${INFERENCE_CPUS:-2}
+
+  web:
+    build:
+      context: ./web
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_MOCK_API: "false"
+    image: ecoquest-web:0.1.0
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      inference:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: ${WEB_MEM:-512m}
+          cpus: ${WEB_CPUS:-1}

@@ -71,7 +71,7 @@ ecoquest/
 
 ## Running locally
 
-Requirements: Node.js 20+ and Python 3.12. The first start of the service downloads ~1.5 GB of weights into the Hugging Face cache.
+Requirements: Node.js 20.9+ and Python 3.12. The first start of the service downloads ~1.5 GB of weights into the Hugging Face cache.
 
 **1. Inference service**
 

@@ -1,5 +1,15 @@
 .venv
 samples
+samples_external
+samples_validation
+samples_park
+benchmark_out
 tests
 __pycache__
+*.pyc
 .pytest_cache
+.env
+.env.*
+Dockerfile
+.dockerignore
+README.md
