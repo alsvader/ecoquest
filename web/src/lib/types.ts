@@ -21,6 +21,9 @@ export type MissionStatus =
   | "pending_upload"
   | "manual_unverified";
 
+/** Estados visuales del sistema de diseño (§3.1). Fuente única; status-badge debe importarlo de aquí. */
+export type MissionResult = "match" | "unsure" | "retry" | "manual";
+
 export interface MissionRecord {
   missionId: MissionId;
   status: MissionStatus;

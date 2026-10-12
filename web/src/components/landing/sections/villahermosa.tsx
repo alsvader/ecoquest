@@ -9,7 +9,7 @@ export function Villahermosa() {
           <p className="eyebrow eyebrow-dark">HECHO EN VILLAHERMOSA</p>
           <h2 id="vhsa-title" className="h2 mt-6 text-papel">Nuestro primer mundo es tropical.</h2>
           <p className="lead mt-6 text-papel">EcoQuest nace en Villahermosa, Tabasco, y su primera expedición vive en el Parque Tomás Garrido Canabal. Calor, humedad y lluvias forman parte del nivel, por eso las misiones son cortas y flexibles.</p>
-          <ul className="mt-8 flex flex-wrap gap-3 text-tinta">
+          <ul role="list" className="mt-8 flex flex-wrap gap-3 text-tinta">
             <li className="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Lleva agua</li>
             <li className="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Ve con calzado para terreno mojado</li>
             <li className="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Si llueve fuerte, deja la partida para otro día</li>
@@ -28,7 +28,7 @@ export function Villahermosa() {
             <Icon name="flower" size={32} className="px-shadow absolute left-[52%] top-[18%]" />
             <Icon name="leaf" size={32} className="px-shadow absolute bottom-[12%] left-[6%]" />
             <div className="absolute left-1/2 top-[46%] flex -translate-x-1/2 sm:left-[38%] -translate-y-full flex-col items-center" aria-hidden="true">
-              <span className="whitespace-nowrap border-3 border-tinta bg-white px-3 py-2 text-[15px] font-bold leading-tight text-tinta shadow-brutal-sm">Parque Tomás Garrido Canabal</span>
+              <span className="max-w-[85%] whitespace-normal border-3 border-tinta bg-white px-3 py-2 text-center text-[15px] font-bold leading-tight text-tinta shadow-brutal-sm">Parque Tomás Garrido Canabal</span>
               <Icon name="pin" size={40} className="px-shadow mt-1" />
             </div>
             <span className="sticker absolute -bottom-4 left-5 bg-voltio" aria-hidden="true">MUNDO 1</span>
@@ -36,7 +36,6 @@ export function Villahermosa() {
           {/* Evidencia de la salida real: se reemplaza cuando exista (D10) */}
           <div className="border-4 border-dashed border-papel p-6">
             <p className="text-[20px] font-bold leading-snug text-papel">Próximamente: la bitácora de nuestra primera salida, con aciertos y errores.</p>
-            <p className="mt-2 text-sm text-papel">Evidencia de la salida real: [Por definir]</p>
           </div>
         </div>
       </div>

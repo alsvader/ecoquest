@@ -1,20 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Button, LinkButton } from "@/components/ui/button";
+import { ConfirmAction } from "@/components/eq/confirm-action";
 import { SafetyNotice } from "@/components/eq/safety-notice";
 import { Screen } from "@/components/eq/screen";
-import { useExpedition } from "@/components/expedition-provider";
+import { useExpedition, useStartExpedition } from "@/components/expedition-provider";
 import { useScreenView } from "@/components/use-screen-view";
 import { EDEN_EXPEDITION } from "@/data/expedition";
 import { t } from "@/i18n";
 import { track } from "@/lib/track";
 
 export default function WelcomePage() {
-  useScreenView("welcome");
-  const router = useRouter();
-  const { progress, loaded, start } = useExpedition();
+  useScreenView("welcome", t("title.welcome"));
+  const { progress, loaded } = useExpedition();
+  const { begin, starting } = useStartExpedition("tap_start");
   const inProgress = loaded && progress && !progress.endedAt;
 
   return (
@@ -36,33 +36,25 @@ export default function WelcomePage() {
       </section>
       <SafetyNotice />
       <div className="flex-1" />
-      {inProgress ? (
+      {!loaded ? (
+        // Hasta leer el progreso guardado no sabemos si hay expedición en curso: no ofrecemos «¡Comenzar!».
+        <Button block disabled>
+          {t("common.loading")}
+        </Button>
+      ) : inProgress ? (
         <>
           <LinkButton href="/sesion" block onClick={() => track("tap_resume")}>
             {t("welcome.resume")}
           </LinkButton>
-          <Button
-            variant="secondary"
-            size="sm"
-            block
-            onClick={() => {
-              track("tap_start");
-              start();
-              router.push("/sesion");
-            }}
-          >
-            {t("welcome.start")}
-          </Button>
+          <ConfirmAction
+            label={t("welcome.restart")}
+            message={t("welcome.restartConfirm")}
+            confirmLabel={t("welcome.restartYes")}
+            onConfirm={begin}
+          />
         </>
       ) : (
-        <Button
-          block
-          onClick={() => {
-            track("tap_start");
-            start();
-            router.push("/sesion");
-          }}
-        >
+        <Button block disabled={starting} onClick={() => void begin()}>
           {t("welcome.start")}
         </Button>
       )}

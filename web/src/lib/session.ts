@@ -9,6 +9,7 @@ export function createProgress(now: number): Progress {
 
 function update(p: Progress, id: MissionId, patch: Partial<MissionRecord>, now: number): Progress {
   const prev = p.missions[id];
+  if (!prev) return p;
   return {
     ...p,
     missions: { ...p.missions, [id]: { ...prev, ...patch, updatedAt: now } },
@@ -98,7 +99,7 @@ export function computeSummary(p: Progress, now: number): Summary {
   };
 }
 
-/** Misiones con algún resultado o evidencia (para el progreso de la sesión). */
+/** Misiones cerradas: confirmadas o marcadas manualmente (progreso de la sesión). */
 export function doneCount(p: Progress): number {
   return MISSION_IDS.filter((id) => ["confirmed", "manual_unverified"].includes(p.missions[id].status)).length;
 }
@@ -108,4 +109,20 @@ export function formatDuration(ms: number): string {
   const m = Math.floor(totalSeconds / 60);
   const s = totalSeconds % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+/** Valida la forma de un progreso cargado de IndexedDB; devuelve null si está corrupto. */
+export function parseProgress(raw: unknown): Progress | null {
+  const r = raw as Partial<Progress> | null | undefined;
+  if (!r || typeof r !== "object" || r.id !== "current") return null;
+  if (typeof r.expeditionId !== "string" || typeof r.startedAt !== "number" || !Number.isFinite(r.startedAt)) return null;
+  if (r.endedAt !== undefined && typeof r.endedAt !== "number") return null;
+  if (!r.missions || typeof r.missions !== "object") return null;
+  for (const id of MISSION_IDS) {
+    const m = r.missions[id] as Partial<MissionRecord> | undefined;
+    if (!m || typeof m !== "object" || m.missionId !== id || typeof m.status !== "string" || typeof m.attempts !== "number") {
+      return null;
+    }
+  }
+  return r as Progress;
 }

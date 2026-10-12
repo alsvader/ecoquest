@@ -10,14 +10,14 @@ const RULES: { bar: string; icon: LandingIconName; title: string; text: string }
 /** Sección 6 · Reglas de la partida. */
 export function Principios() {
   return (
-    <section id="principios" className="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="reglas-title">
+    <section id="principios" className="overflow-x-clip border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="reglas-title">
       <div className="wrap">
         <div className="relative block pr-0 sm:inline-block sm:pr-6">
           <p className="eyebrow">REGLAS DE LA PARTIDA</p>
           <h2 id="reglas-title" className="h2 mt-6">Jugamos limpio.</h2>
           <span className="sticker sticker-r relative mt-5 bg-turbo text-[15px] sm:absolute sm:-right-36 sm:top-[66px] sm:mt-0" aria-hidden="true">REGLAS</span>
         </div>
-        <ul className="mt-12 grid gap-8 md:grid-cols-2">
+        <ul role="list" className="mt-12 grid gap-8 md:grid-cols-2">
           {RULES.map((r) => (
             <li key={r.title} className="flex flex-col border-4 border-tinta bg-white shadow-brutal">
               <div className={`h-5 border-b-4 border-tinta ${r.bar}`} aria-hidden="true"></div>

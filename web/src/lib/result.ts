@@ -1,7 +1,6 @@
 import type { DictKey } from "@/i18n";
 import type { ApiError } from "./api";
-import type { MissionResult } from "@/components/eq/status-badge";
-import type { MissionStatus } from "./types";
+import type { MissionResult, MissionStatus } from "./types";
 
 export interface StatusView {
   titleKey: DictKey;
@@ -37,6 +36,8 @@ export function errorMessageKey(e: ApiError): DictKey {
   switch (e.kind) {
     case "network":
       return "error.network";
+    case "timeout":
+      return "error.timeout";
     case "rate_limit":
       return "error.rateLimit";
     case "bad_request":

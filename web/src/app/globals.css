@@ -10,19 +10,19 @@
  */
 @theme {
   /* Paleta EcoQuest */
-  --color-lima: #B6FF3B;
-  --color-voltio: #FFE600;
-  --color-turbo: #FF3EA5;
-  --color-glitch: #00E5FF;
-  --color-lava: #FF7A00;
-  --color-selva: #0A5C2B;
-  --color-tinta: #000000;
-  --color-papel: #FFFBEF;
+  --color-lima: var(--eq-lima);
+  --color-voltio: var(--eq-amarillo);
+  --color-turbo: var(--eq-rosa);
+  --color-glitch: var(--eq-cian);
+  --color-lava: var(--eq-naranja);
+  --color-selva: var(--eq-selva);
+  --color-tinta: var(--eq-tinta);
+  --color-papel: var(--eq-papel);
   /* Estados de resultado IA */
-  --color-status-match: #B6FF3B;
-  --color-status-unsure: #FFE600;
-  --color-status-retry: #FF7A00;
-  --color-status-manual: #FF3EA5;
+  --color-status-match: var(--eq-status-match);
+  --color-status-unsure: var(--eq-status-unsure);
+  --color-status-retry: var(--eq-status-retry);
+  --color-status-manual: var(--eq-status-manual);
   /* Puente shadcn/ui (variables HSL de tokens.css) */
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
@@ -83,14 +83,14 @@
   --radius-3xl: 0;
   --radius-4xl: 0;
 
-  --shadow-brutal-sm: 3px 3px 0 0 #000;
-  --shadow-brutal: 5px 5px 0 0 #000;
-  --shadow-brutal-lg: 8px 8px 0 0 #000;
+  --shadow-brutal-sm: 3px 3px 0 0 var(--eq-tinta);
+  --shadow-brutal: 5px 5px 0 0 var(--eq-tinta);
+  --shadow-brutal-lg: 8px 8px 0 0 var(--eq-tinta);
 
   --translate-press: 5px;
 
   /* Añadidos de la landing (tailwind.config.js v3) */
-  --shadow-brutal-hover: 7px 7px 0 0 #000;
+  --shadow-brutal-hover: 7px 7px 0 0 var(--eq-tinta);
   --container-wrap: 1312px;
   --breakpoint-xs: 420px;
 }
@@ -134,5 +134,5 @@
   * { @apply border-border; }
   html { -webkit-tap-highlight-color: transparent; }
   body { @apply bg-background text-foreground font-sans text-base; }
-  :focus-visible { outline: 4px solid #FF3EA5; outline-offset: 3px; } /* foco Rosa Turbo (guía) */
+  :focus-visible { outline: 3px solid var(--eq-tinta); outline-offset: 2px; box-shadow: 0 0 0 3px var(--eq-blanco); } /* doble anillo tinta + blanco: visible sobre cualquier color */
 }

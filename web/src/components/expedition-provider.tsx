@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { MissionId } from "@/data/expedition";
 import { clearAll, clearPhotos, deletePhoto, getProgress, savePhoto, saveProgress } from "@/lib/db";
 import {
@@ -10,13 +11,19 @@ import {
   createProgress,
   finishProgress,
 } from "@/lib/session";
+import { track } from "@/lib/track";
 import type { ClassifyResponse, Progress } from "@/lib/types";
 
-interface Ctx {
+interface State {
   loaded: boolean;
   storageOk: boolean;
   progress: Progress | null;
-  start: () => void;
+}
+
+interface Actions {
+  /** Empieza una expedición nueva: borra las fotos anteriores y reemplaza el progreso. */
+  start: () => Promise<void>;
+  /** Guarda la foto; rechaza si no se pudo guardar (la UI muestra el error de lectura). */
   recordPhoto: (id: MissionId, blob: Blob) => Promise<string>;
   recordResult: (id: MissionId, resp: ClassifyResponse, photoId: string) => void;
   recordPending: (id: MissionId, photoId: string) => void;
@@ -27,12 +34,44 @@ interface Ctx {
   deleteEverything: () => Promise<void>;
 }
 
-const ExpeditionContext = createContext<Ctx | null>(null);
+type Ctx = State & Actions;
+
+// Estado y acciones van en contextos separados: las acciones son estables y no provocan renders.
+const StateContext = createContext<State | null>(null);
+const ActionsContext = createContext<Actions | null>(null);
+
+export function useExpeditionActions(): Actions {
+  const ctx = useContext(ActionsContext);
+  if (!ctx) throw new Error("useExpeditionActions fuera de ExpeditionProvider");
+  return ctx;
+}
 
 export function useExpedition(): Ctx {
-  const ctx = useContext(ExpeditionContext);
-  if (!ctx) throw new Error("useExpedition fuera de ExpeditionProvider");
-  return ctx;
+  const state = useContext(StateContext);
+  const actions = useContext(ActionsContext);
+  if (!state || !actions) throw new Error("useExpedition fuera de ExpeditionProvider");
+  return useMemo(() => ({ ...state, ...actions }), [state, actions]);
+}
+
+/**
+ * Manejador compartido de «Comenzar»: registra el toque, crea la expedición y entra a la sesión.
+ * `starting` evita dobles toques mientras se limpian las fotos anteriores.
+ */
+export function useStartExpedition(event: string) {
+  const { start } = useExpeditionActions();
+  const router = useRouter();
+  const [starting, setStarting] = useState(false);
+  const begin = useCallback(async () => {
+    setStarting(true);
+    track(event);
+    try {
+      await start();
+      router.push("/sesion");
+    } finally {
+      setStarting(false);
+    }
+  }, [event, start, router]);
+  return { begin, starting };
 }
 
 export function ExpeditionProvider({ children }: { children: React.ReactNode }) {
@@ -40,10 +79,13 @@ export function ExpeditionProvider({ children }: { children: React.ReactNode }) 
   const [loaded, setLoaded] = useState(false);
   const [storageOk, setStorageOk] = useState(true);
   const ref = useRef<Progress | null>(null);
+  // Si ya hubo un start/commit/borrado, el resultado tardío de getProgress está obsoleto.
+  const touched = useRef(false);
 
   useEffect(() => {
     getProgress()
       .then((p) => {
+        if (touched.current) return;
         ref.current = p ?? null;
         setProgressState(p ?? null);
       })
@@ -52,6 +94,7 @@ export function ExpeditionProvider({ children }: { children: React.ReactNode }) 
   }, []);
 
   const commit = useCallback((next: Progress | null) => {
+    touched.current = true;
     ref.current = next;
     setProgressState(next);
     if (next) saveProgress(next).catch(() => setStorageOk(false));
@@ -64,16 +107,22 @@ export function ExpeditionProvider({ children }: { children: React.ReactNode }) 
     [commit],
   );
 
-  const value = useMemo<Ctx>(
+  const actions = useMemo<Actions>(
     () => ({
-      loaded,
-      storageOk,
-      progress,
-      start: () => commit(createProgress(Date.now())),
+      start: async () => {
+        touched.current = true;
+        await clearPhotos().catch(() => undefined);
+        commit(createProgress(Date.now()));
+      },
       recordPhoto: async (id, blob) => {
         const previous = ref.current?.missions[id].photoId;
         const photoId = `${id}-${Date.now()}`;
-        await savePhoto({ id: photoId, missionId: id, blob, createdAt: Date.now() }).catch(() => setStorageOk(false));
+        try {
+          await savePhoto({ id: photoId, missionId: id, blob, createdAt: Date.now() });
+        } catch (e) {
+          setStorageOk(false);
+          throw e;
+        }
         if (previous) deletePhoto(previous).catch(() => undefined);
         return photoId;
       },
@@ -92,12 +141,19 @@ export function ExpeditionProvider({ children }: { children: React.ReactNode }) 
       },
       deleteEverything: async () => {
         await clearAll();
+        touched.current = true;
         ref.current = null;
         setProgressState(null);
       },
     }),
-    [loaded, storageOk, progress, commit, mutate],
+    [commit, mutate],
   );
 
-  return <ExpeditionContext.Provider value={value}>{children}</ExpeditionContext.Provider>;
+  const state = useMemo<State>(() => ({ loaded, storageOk, progress }), [loaded, storageOk, progress]);
+
+  return (
+    <ActionsContext.Provider value={actions}>
+      <StateContext.Provider value={state}>{children}</StateContext.Provider>
+    </ActionsContext.Provider>
+  );
 }

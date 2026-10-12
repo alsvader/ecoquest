@@ -34,7 +34,7 @@ export function MissionCard({ index, total, icon, title, description, result, on
           <PixelIcon name={icon as PixelIconName} scale={4} flat />
         </div>
         <div>
-          <h3 className="font-sans text-base font-bold leading-tight">{title}</h3>
+          <h2 className="font-sans text-base font-bold leading-tight">{title}</h2>
           <div className="mt-1">{result ? <StatusBadge result={result} size="chip" /> : <PendingChip />}</div>
         </div>
       </>
@@ -58,7 +58,7 @@ export function MissionCard({ index, total, icon, title, description, result, on
       </div>
       <div>
         <span className="font-pixel text-pixel-sm font-bold uppercase tracking-[0.5px]">{t("mission.hud", { n: index, total })}</span>
-        <h3 className="mb-1.5 mt-1 font-display text-lg leading-[1.1]">{title}</h3>
+        <h2 className="mb-1.5 mt-1 font-display text-lg leading-[1.1]">{title}</h2>
         {description && <p className="text-base">{description}</p>}
       </div>
       <div className="col-span-full flex items-center justify-between gap-2.5 border-t-3 border-tinta pt-3">

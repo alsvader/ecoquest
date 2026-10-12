@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { t } from "@/i18n";
-import type { MissionResult } from "./status-badge";
+import { STATUS, type MissionResult } from "./status-badge";
 
 type Seg = MissionResult | "pending";
 
@@ -44,12 +44,17 @@ export function XpBar({
           <i
             key={i}
             className={cn(
-              "flex-1 border-2 border-tinta",
+              "flex flex-1 items-center justify-center border-2 border-tinta text-xs font-bold not-italic leading-none",
               s === "match" && "bg-lima",
               s === "manual" && "bg-turbo",
-              (s === "pending" || s === "unsure" || s === "retry") && "border-dashed bg-white",
+              // «No confirmado» y «Reintentar» se distinguen de «Pendiente» por color y glifo (no solo por aria-valuetext).
+              s === "unsure" && "border-dashed bg-status-unsure",
+              s === "retry" && "border-dashed bg-status-retry",
+              s === "pending" && "border-dashed bg-white",
             )}
-          />
+          >
+            {(s === "unsure" || s === "retry") && <span aria-hidden="true">{STATUS[s].icon}</span>}
+          </i>
         ))}
       </div>
     </div>

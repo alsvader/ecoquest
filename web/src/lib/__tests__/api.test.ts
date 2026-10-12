@@ -17,6 +17,13 @@ describe("parseClassifyResponse", () => {
   it("acepta el contrato", () => expect(parseClassifyResponse(okBody).status).toBe("confirmed"));
   it("rechaza estado inválido", () => expect(() => parseClassifyResponse({ ...okBody, status: "maybe" })).toThrow(ApiError));
   it("rechaza mission_id inválido", () => expect(() => parseClassifyResponse({ ...okBody, mission_id: "x" })).toThrow(ApiError));
+  it("rechaza scores fuera de rango o no numéricos", () => {
+    expect(() => parseClassifyResponse({ ...okBody, target_score: 1.5 })).toThrow(ApiError);
+    expect(() => parseClassifyResponse({ ...okBody, target_score: NaN })).toThrow(ApiError);
+    expect(() => parseClassifyResponse({ ...okBody, scores: { leaf: "x" } })).toThrow(ApiError);
+    expect(() => parseClassifyResponse({ ...okBody, scores: [0.5] })).toThrow(ApiError);
+    expect(() => parseClassifyResponse({ ...okBody, latency_ms: -1 })).toThrow(ApiError);
+  });
   it("rechaza null", () => expect(() => parseClassifyResponse(null)).toThrow(ApiError));
 });
 
@@ -50,6 +57,31 @@ describe("classifyReal", () => {
     expect(err.kind).toBe("network");
     expect(isRetryableError(err)).toBe(true);
   });
+  it("rechaza imagen de tipo o tamaño inválido antes de llamar", async () => {
+    const f = vi.fn(() => resp(200, okBody));
+    const bad = new Blob(["x"], { type: "text/html" });
+    const err = await classifyReal(bad, "leaf", f as unknown as typeof fetch, "http://x").catch((e) => e);
+    expect(err.kind).toBe("bad_request");
+    expect(f).not.toHaveBeenCalled();
+  });
+  it("aborto por timeout -> timeout (reintentable)", async () => {
+    vi.useFakeTimers();
+    const f = vi.fn((_u: string, init: RequestInit) => new Promise((_, rej) => init.signal!.addEventListener("abort", () => rej(new DOMException("a", "AbortError")))));
+    const p = classifyReal(blob, "leaf", f as unknown as typeof fetch, "http://x").catch((e) => e);
+    await vi.advanceTimersByTimeAsync(31_000);
+    const err = await p;
+    vi.useRealTimers();
+    expect(err.kind).toBe("timeout");
+    expect(isRetryableError(err)).toBe(true);
+  });
+  it("cancelación externa aborta el fetch y no cuenta como timeout", async () => {
+    const f = vi.fn((_u: string, init: RequestInit) => new Promise((_, rej) => init.signal!.addEventListener("abort", () => rej(new DOMException("a", "AbortError")))));
+    const ctl = new AbortController();
+    const p = classifyReal(blob, "leaf", f as unknown as typeof fetch, "http://x", ctl.signal).catch((e) => e);
+    ctl.abort();
+    const err = await p;
+    expect(err.kind).toBe("network");
+  });
   it("respuesta 200 con forma inválida", async () => {
     const f = vi.fn(() => resp(200, { nope: 1 }));
     const err = await classifyReal(blob, "leaf", f as unknown as typeof fetch, "http://x").catch((e) => e);
@@ -72,8 +104,10 @@ describe("classifyMock", () => {
     await expect(classifyMock(blob, "leaf", "error.jpg", 0)).rejects.toMatchObject({ kind: "network" });
   });
   it("umbrales del mock", () => {
-    expect(mockStatus(0.5)).toBe("confirmed");
-    expect(mockStatus(0.3)).toBe("inconclusive");
-    expect(mockStatus(0.29)).toBe("unconfirmed");
+    // flower: umbral 0.5 (data/expedition); inconclusive desde la mitad
+    expect(mockStatus(0.5, "flower")).toBe("confirmed");
+    expect(mockStatus(0.25, "flower")).toBe("inconclusive");
+    expect(mockStatus(0.24, "flower")).toBe("unconfirmed");
+    expect(mockStatus(0.6, "leaf")).toBe("inconclusive");
   });
 });

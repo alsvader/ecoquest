@@ -19,18 +19,18 @@ export function Roadmap() {
           <h2 id="roadmap-title" className="h2 mt-6">El mapa apenas empieza.</h2>
           <p className="lead mt-5">Ideas a explorar después del piloto, sin fechas ni promesas. Cada una entra solo si funciona en pruebas reales.</p>
         </div>
-        <ol className="mt-14 grid grid-cols-1 gap-x-6 gap-y-6 xs:grid-cols-2 xs:gap-y-10 lg:grid-cols-4">
+        <ol role="list" className="mt-14 grid grid-cols-1 gap-x-6 gap-y-6 xs:grid-cols-2 xs:gap-y-10 lg:grid-cols-4">
           <li className="flex items-center gap-2 text-left xs:col-span-2 xs:flex-col xs:gap-0 xs:text-center lg:col-span-1">
             <div className="badge badge-xs xs:badge-sm" role="img" aria-label="Insignia desbloqueada: Descubre el Edén">
               <div className="ring"></div><div className="inner"></div>
-              <div className="content"><Icon name="tree" size={40} className="px-shadow" /><span className="pix hidden text-[8px] leading-[1.4] xs:block">Descubre<br />el Edén</span></div>
+              <div className="content"><Icon name="tree" size={40} className="px-shadow" /><span className="pix hidden text-[12px] leading-[1.4] xs:block">Descubre<br />el Edén</span></div>
             </div>
             <div><h3 className="mt-2 text-[21px] leading-tight"><span className="pix block text-[12px]">MUNDO 1</span>Descubre el Edén</h3>
             <p className="mt-1.5 text-[16px] leading-snug xs:max-w-[260px]">Expedición piloto en Villahermosa.</p></div>
           </li>
           {LOCKED.map((l) => (
             <li key={l.title} className="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
-              <div className="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div className="ring"></div><div className="inner"></div><div className="content"><span className="pix text-[20px] leading-none">?</span><span className="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+              <div className="badge badge-xs xs:badge-sm locked" aria-hidden="true"><div className="ring"></div><div className="inner"></div><div className="content"><span className="pix text-[20px] leading-none">?</span><span className="pix hidden text-[12px] xs:block">Próxima</span></div></div>
               <div><h3 className="mt-1 text-[19px] leading-tight">{l.title}</h3><p className="mt-1.5 text-[16px] leading-snug">{l.text}</p></div>
             </li>
           ))}

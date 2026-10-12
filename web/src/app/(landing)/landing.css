@@ -2,21 +2,17 @@
    Todo va bajo `.landing` para no colisionar con los componentes de la app (.card, .badge, .chip…). */
 @reference "../globals.css";
 
-/* Fix de la guía: Silkscreen Bold con subsets latin + latin-ext (Ó, É, Á, Ñ…) bajo un nombre propio. */
-@font-face{font-family:"EQ Pixel";font-weight:700;font-style:normal;font-display:swap;size-adjust:128%;
-  src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JUjfVPf62XiF7kO-i9aAhAfmyi2A.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
-@font-face{font-family:"EQ Pixel";font-weight:700;font-style:normal;font-display:swap;size-adjust:128%;
-  src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JUjfVPf62XiF7kO-i9aAhAfmKi2Oud.woff2) format("woff2");unicode-range:U+0100-02BA,U+1E00-1E9F}
-
-
 /* Scroll suave y ancla bajo el navbar sticky, solo cuando la página es la landing. */
 html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 @media (prefers-reduced-motion: reduce) { html:has(.landing) { scroll-behavior: auto; } }
 
 @layer base {
-  .landing { @apply bg-papel font-sans text-base text-tinta antialiased; --font-pixel: "EQ Pixel", "Silkscreen", monospace; }
+  .landing { @apply bg-papel font-sans text-base text-tinta antialiased; }
   .landing :is(h1, h2, h3, h4) { @apply font-display font-normal; }
-  .landing :focus-visible { outline: 4px solid var(--color-turbo); outline-offset: 3px; }
+  /* Anillo doble (negro + blanco): ≥3:1 sobre papel, lima, turbo y voltio. Variante clara en secciones oscuras. */
+  .landing :focus-visible { outline: 3px solid #000; outline-offset: 3px; box-shadow: 0 0 0 3px #fff; }
+  .landing :is(.bg-selva, .bg-tinta, footer) :focus-visible { outline-color: var(--color-voltio); box-shadow: 0 0 0 3px #000; }
+  .landing main:focus-visible { outline: none; box-shadow: none; }
   .landing [id] { scroll-margin-top: 104px; }
   .landing summary::-webkit-details-marker { display: none; }
   @media (prefers-reduced-motion: reduce) {
@@ -42,6 +38,8 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   }
   .btn-sec { @apply bg-white; }
   .btn-ia { @apply bg-glitch; }
+  /* Debajo de 360px el texto del botón puede partirse en dos líneas en vez de desbordar. */
+  @media (max-width:359px) { .btn { white-space: normal; } }
   .btn-sm { @apply min-h-12 px-4 py-2 text-sm leading-[1.45] shadow-brutal-sm; }
   .btn-lg { @apply min-h-16 px-[30px] py-3.5 text-[22px]; }
   .btn-ghost { @apply border-dashed bg-transparent shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-none active:translate-x-0 active:translate-y-0; }
@@ -66,7 +64,7 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   /* ——— PixelIcon ——— */
   .px { image-rendering: pixelated; @apply inline-block flex-none align-middle; }
-  .px-shadow { filter: drop-shadow(3px 3px 0 #000); }
+  .px-shadow { filter: drop-shadow(3px 3px 0 var(--color-tinta)); }
 
   /* ——— XP bars (DS §7.4) ——— */
   .xp { @apply flex h-10 gap-1 border-4 border-tinta bg-white p-1 shadow-brutal-sm; }
@@ -76,7 +74,7 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   .xp-cont { @apply relative h-[30px] border-4 border-tinta bg-white shadow-brutal-sm; }
   .xp-cont .fill { @apply absolute inset-y-0 left-0 border-r-4 border-tinta bg-voltio;
     /* Patrón duro (cortes secos), NO degradado visual — única excepción permitida por el DS */
-    background-image: repeating-linear-gradient(90deg, transparent 0 18px, #000 18px 21px); }
+    background-image: repeating-linear-gradient(90deg, transparent 0 18px, var(--color-tinta) 18px 21px); }
   .xp-cont .lbl { @apply absolute right-[9px] top-1/2 -translate-y-1/2 font-pixel text-[12px] font-bold leading-none; }
 
   /* ——— Status badge (DS §7.3) ——— */
@@ -86,9 +84,8 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 
   /* ——— Safety notice (DS §7.7) ——— */
   .safety { @apply border-3 border-tinta bg-lava px-2.5 py-[9px] text-[13.5px] font-medium leading-[1.3] text-tinta; }
-  .safety b { @apply mb-[5px] block font-pixel text-[10px] font-bold tracking-[0.5px]; }
-  .warn-ico { font-family: var(--font-sans); font-size: 14px; line-height: 1; vertical-align: -1px; }
-
+  .safety b { @apply mb-[5px] block font-pixel text-[12px] font-bold tracking-[0.5px]; }
+  
   /* ——— Insignia (DS §7.5) ——— */
   .badge { --s:200px; --in:34px; width:var(--s); height:var(--s); margin:calc(var(--s) * .23); @apply relative flex-none; }
   .badge-sm { --s:140px; --in:24px; }
@@ -96,23 +93,24 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   /* `xs:badge-sm` (variante sobre clase custom) no existe en v4: se replica a mano a partir de 420px. */
   @media (min-width:420px) { .badge.xs\:badge-sm { --s:140px; --in:24px; } }
   .badge .ring { @apply absolute inset-0 rotate-45 border-4 border-tinta bg-voltio;
-    /* El original recibía por accidente el halo de la utilidad `ring` de Tailwind v3; se conserva para igualar píxel a píxel. */
-    box-shadow: 0 0 0 3px rgb(59 130 246 / .5), 8px 8px 0 0 #000 !important; }
+        box-shadow: 8px 8px 0 0 var(--color-tinta) !important; }
   .badge .inner { inset: var(--in); @apply absolute rotate-45 border-4 border-tinta bg-lima; }
   .badge .content { @apply absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-center; }
-  .badge .ribbon { @apply absolute bottom-[-20px] left-1/2 whitespace-nowrap border-3 border-tinta bg-turbo px-2.5 py-[7px] font-pixel text-[10px] font-bold uppercase leading-none tracking-[0.5px] shadow-brutal-sm;
+  .badge .ribbon { @apply absolute bottom-[-20px] left-1/2 whitespace-nowrap border-3 border-tinta bg-turbo px-2.5 py-[7px] font-pixel text-[12px] font-bold uppercase leading-none tracking-[0.5px] shadow-brutal-sm;
     transform: translateX(-50%) rotate(-3deg); }
   .badge.locked .ring { @apply bg-[#E8E4D6]; }
   .badge.locked .inner { @apply border-dashed bg-white; }
 
   /* ——— Phone mockups (guía .phone) ——— */
-  .phone { width:296px; height:612px; @apply relative flex-none border-4 border-tinta bg-tinta p-2.5; box-shadow: 10px 10px 0 0 #000, 10px 10px 0 4px var(--color-papel); }
-  .phone-lima { box-shadow: 10px 10px 0 0 #000, 10px 10px 0 4px var(--color-lima); }
+  .phone { width:296px; height:612px; @apply relative flex-none border-4 border-tinta bg-tinta p-2.5; box-shadow: 10px 10px 0 0 var(--color-tinta), 10px 10px 0 4px var(--color-papel); }
+  .phone-lima { box-shadow: 10px 10px 0 0 var(--color-tinta), 10px 10px 0 4px var(--color-lima); }
   .phone .notch { @apply absolute left-1/2 top-2.5 z-10 h-[17px] w-[84px] -translate-x-1/2 bg-tinta; }
   .screen { @apply relative flex h-full w-full flex-col overflow-hidden bg-papel text-tinta; }
   .sbar { @apply flex h-[26px] flex-none items-center justify-between border-b-3 border-tinta bg-white px-3 text-[11px] font-bold leading-none; }
   .scr-body { @apply flex min-h-0 flex-1 flex-col gap-[11px] p-[13px]; }
   .scr-body :where(.btn) { @apply min-h-[56px] w-full px-3.5 py-2.5 text-[18px] shadow-[4px_4px_0_#000]; }
+  /* Los .btn dentro de un mock son decorativos: no se pueden pulsar ni animar. */
+  .screen .btn { @apply pointer-events-none select-none hover:translate-x-0 hover:translate-y-0 active:translate-x-0 active:translate-y-0 hover:shadow-[4px_4px_0_#000] active:shadow-[4px_4px_0_#000]; }
   .scr-title { @apply font-display text-[25px] leading-[1.05]; }
   .mini { @apply grid grid-cols-[40px_1fr] items-center gap-2 border-3 border-tinta bg-white p-2 shadow-brutal-sm; }
   .mini .ico { @apply flex h-10 w-10 items-center justify-center border-2 border-tinta; }
@@ -123,13 +121,14 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   .phone-cap { @apply whitespace-nowrap border-3 border-tinta bg-white px-3 py-1.5 text-xs font-bold italic shadow-brutal-sm; }
 
   /* ——— Navbar links ——— */
+  .nav-link[aria-current] { @apply border-tinta bg-lima shadow-brutal-sm; }
   .nav-link { @apply border-3 border-transparent px-3.5 py-[9px] text-[17px] font-bold no-underline hover:border-tinta hover:bg-white hover:shadow-brutal-sm; }
 
   /* ——— Lists ——— */
   .li-x, .li-ok { @apply relative py-2 pl-10; }
   .li-x::before, .li-ok::before { @apply absolute left-0 top-2 flex h-7 w-7 items-center justify-center border-2 border-tinta text-[15px] font-bold leading-none text-tinta; }
-  .li-x::before { content:"✕"; @apply bg-lava; }
-  .li-ok::before { content:"✓"; @apply bg-lima; }
+  .li-x::before { content:"✕" / ""; @apply bg-lava; }
+  .li-ok::before { content:"✓" / ""; @apply bg-lima; }
 
   /* ——— FAQ (details) ——— */
   .faq { @apply border-4 border-tinta bg-white shadow-brutal transition-[transform,box-shadow] duration-snap; }

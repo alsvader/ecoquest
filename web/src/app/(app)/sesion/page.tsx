@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ConfirmAction } from "@/components/eq/confirm-action";
+import { Elapsed } from "@/components/eq/elapsed";
 import { Hud } from "@/components/eq/hud";
 import { MissionCard } from "@/components/eq/mission-card";
 import { PixelIcon } from "@/components/eq/pixel-icon";
@@ -10,36 +12,36 @@ import { Screen, ScreenLoading } from "@/components/eq/screen";
 import { XpBar } from "@/components/eq/xp-bar";
 import { useExpedition } from "@/components/expedition-provider";
 import { useRequireProgress } from "@/components/use-guard";
-import { useNow } from "@/components/use-now";
 import { useScreenView } from "@/components/use-screen-view";
-import { EDEN_EXPEDITION } from "@/data/expedition";
+import { EDEN_EXPEDITION, type MissionId } from "@/data/expedition";
 import { t } from "@/i18n";
 import { setPendingCapture } from "@/lib/pending-capture";
 import { toResult } from "@/lib/result";
-import { doneCount, formatDuration } from "@/lib/session";
+import { doneCount } from "@/lib/session";
 import { track } from "@/lib/track";
 
 export default function SessionPage() {
-  useScreenView("session");
-  const router = useRouter();
-  const now = useNow();
+  useScreenView("session", t("title.session"));
   const { finish } = useExpedition();
-  const { ready, progress } = useRequireProgress();
+  const router = useRouter();
+  const { ready, progress } = useRequireProgress("active");
   const cameraRef = useRef<HTMLInputElement>(null);
+  const [selectedId, setSelectedId] = useState<MissionId | null>(null);
   if (!ready || !progress) return <ScreenLoading label={t("common.loading")} />;
 
   const missions = EDEN_EXPEDITION.missions;
   const total = missions.length;
   const done = doneCount(progress);
   const allDone = done === total;
-  // Misión a la que va «Capturar hallazgo»: la primera sin cerrar.
-  const next = missions.find((m) => !["confirmed", "manual_unverified"].includes(progress.missions[m.id].status));
+  // «Capturar hallazgo» va a la misión elegida; por defecto, la primera sin cerrar.
+  const pending = missions.filter((m) => !["confirmed", "manual_unverified"].includes(progress.missions[m.id].status));
+  const target = pending.find((m) => m.id === selectedId) ?? pending[0];
 
   function finishExpedition() {
-    if (!allDone && !window.confirm(t("session.finishConfirm"))) return;
     track("tap_finish");
+    // replace: «atrás» desde el resumen no vuelve a una sesión ya terminada.
     finish();
-    router.push("/resumen");
+    router.replace("/resumen");
   }
 
   return (
@@ -65,13 +67,11 @@ export default function SessionPage() {
           </li>
         ))}
       </ul>
-      <p className="border-3 border-tinta bg-glitch px-3 py-2.5 text-base font-bold leading-[1.3]">
-        <span aria-hidden="true">📵 </span>
-        {t("session.stow")}
+      <p className="flex items-center gap-2.5 border-3 border-tinta bg-glitch px-3 py-2.5 text-base font-bold leading-[1.3]">
+        <PixelIcon name="eye" scale={3} flat className="flex-none" />
+        <span>{t("session.stow")}</span>
       </p>
-      <p className="text-center text-sm font-bold">
-        {t("session.elapsed", { time: now === null ? "0:00" : formatDuration(now - progress.startedAt) })}
-      </p>
+      <Elapsed startedAt={progress.startedAt} />
       <div className="flex-1" />
 
       {/* La cámara trasera se abre con este toque (RF-05); el análisis ocurre en la pantalla de la misión. */}
@@ -85,9 +85,9 @@ export default function SessionPage() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           e.target.value = "";
-          if (!file || !next) return;
+          if (!file || !target) return;
           setPendingCapture(file);
-          router.push(`/mision/${next.id}`);
+          router.push(`/mision/${target.id}`);
         }}
       />
       {allDone ? (
@@ -96,20 +96,43 @@ export default function SessionPage() {
         </Button>
       ) : (
         <>
+          {pending.length > 1 && (
+            <fieldset className="flex flex-col gap-1.5">
+              <legend className="mb-1.5 text-sm font-bold">{t("session.captureFor")}</legend>
+              <div className="flex gap-2">
+                {pending.map((m) => (
+                  <Button
+                    key={m.id}
+                    size="sm"
+                    variant={m.id === target?.id ? "primary" : "secondary"}
+                    aria-pressed={m.id === target?.id}
+                    className="flex-1 px-2"
+                    onClick={() => setSelectedId(m.id)}
+                  >
+                    {t(m.shortKey)}
+                  </Button>
+                ))}
+              </div>
+            </fieldset>
+          )}
           <Button
             variant="ia"
             block
             onClick={() => {
-              track("tap_open_camera", { missionId: next?.id });
+              track("tap_open_camera", { missionId: target?.id });
               cameraRef.current?.click();
             }}
           >
             <PixelIcon name="camera" scale={3} flat />
             {t("session.capture")}
           </Button>
-          <Button variant="ghost" size="sm" block onClick={finishExpedition}>
-            {t("session.finish")}
-          </Button>
+          <ConfirmAction
+            variant="ghost"
+            label={t("session.finish")}
+            message={t("session.finishConfirm")}
+            confirmLabel={t("session.finishYes")}
+            onConfirm={finishExpedition}
+          />
         </>
       )}
     </Screen>

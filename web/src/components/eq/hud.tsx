@@ -12,7 +12,8 @@ export function Hud({ left, right }: { left: React.ReactNode; right: React.React
 
 /** Chip «IA» (Cian) del HUD de resultado. El texto «IA» es literal de marca, no copy traducible. */
 export const IaChip = () => (
-  <span className="border-2 border-tinta bg-glitch px-1.5 py-0.5 font-pixel text-pixel-sm font-bold uppercase" aria-label={t("hud.iaAria")}>
-    IA
+  <span className="border-2 border-tinta bg-glitch px-1.5 py-0.5 font-pixel text-pixel-sm font-bold uppercase">
+    <span aria-hidden="true">IA</span>
+    <span className="sr-only">{t("hud.iaAria")}</span>
   </span>
 );

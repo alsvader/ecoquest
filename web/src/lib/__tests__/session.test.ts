@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { applyClassification, applyManual, applyPending, badgeFor, computeSummary, createProgress, doneCount, finishProgress, formatDuration } from "../session";
+import { applyClassification, applyManual, applyPending, badgeFor, computeSummary, createProgress, doneCount, finishProgress, formatDuration, parseProgress } from "../session";
 import type { ClassifyResponse } from "../types";
 
 const resp = (status: ClassifyResponse["status"]): ClassifyResponse => ({
@@ -49,5 +49,17 @@ describe("session", () => {
   it("formatDuration", () => {
     expect(formatDuration(65_000)).toBe("1:05");
     expect(formatDuration(0)).toBe("0:00");
+  });
+
+  it("applyManual sobre misión inexistente no rompe", () => {
+    const p = createProgress(1);
+    expect(applyManual(p, "nope" as never, 2)).toBe(p);
+  });
+  it("parseProgress valida la forma", () => {
+    const p = createProgress(1);
+    expect(parseProgress(p)).toBe(p);
+    expect(parseProgress(null)).toBeNull();
+    expect(parseProgress({ ...p, missions: {} })).toBeNull();
+    expect(parseProgress({ ...p, startedAt: "x" })).toBeNull();
   });
 });

@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 import { t, type DictKey } from "@/i18n";
 
-export type MissionResult = "match" | "unsure" | "retry" | "manual";
+import type { MissionResult } from "@/lib/types";
+export type { MissionResult };
 
 export const STATUS: Record<MissionResult, { bg: string; icon: string; label: DictKey; sub?: DictKey; chip: DictKey }> = {
   match: { bg: "bg-status-match", icon: "✓", label: "status.match", chip: "status.match" },

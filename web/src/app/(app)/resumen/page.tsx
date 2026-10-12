@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ConfirmAction } from "@/components/eq/confirm-action";
 import { Insignia } from "@/components/eq/insignia";
 import { Screen, ScreenLoading } from "@/components/eq/screen";
 import { PendingChip, StatusBadge } from "@/components/eq/status-badge";
@@ -17,10 +18,10 @@ import { computeSummary, formatDuration } from "@/lib/session";
 import { track } from "@/lib/track";
 
 export default function SummaryPage() {
-  useScreenView("summary");
+  useScreenView("summary", t("title.summary"));
   const router = useRouter();
   const { deletePhotos } = useExpedition();
-  const { ready, progress } = useRequireProgress();
+  const { ready, progress } = useRequireProgress("ended");
   const [photosDeleted, setPhotosDeleted] = useState(false);
   if (!ready || !progress) return <ScreenLoading label={t("common.loading")} />;
 
@@ -66,20 +67,17 @@ export default function SummaryPage() {
       >
         {t("summary.finish")}
       </Button>
-      <Button
-        variant="secondary"
-        size="sm"
-        block
+      <ConfirmAction
+        label={t("summary.deletePhotos")}
+        message={t("summary.deletePhotosConfirm")}
+        confirmLabel={t("summary.deletePhotosYes")}
         disabled={photosDeleted}
-        onClick={async () => {
-          if (!window.confirm(t("summary.deletePhotosConfirm"))) return;
+        onConfirm={async () => {
           track("tap_delete_photos");
-          await deletePhotos().catch(() => undefined);
+          await deletePhotos();
           setPhotosDeleted(true);
         }}
-      >
-        {t("summary.deletePhotos")}
-      </Button>
+      />
     </Screen>
   );
 }

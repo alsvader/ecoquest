@@ -16,25 +16,46 @@ export function withinUploadLimit(size: number): boolean {
   return size <= MAX_UPLOAD_BYTES;
 }
 
+export type ImageErrorKind = "decode" | "canvas" | "encode";
+
+/** La imagen no pudo recodificarse en el cliente; NUNCA se devuelve el original (puede traer EXIF/GPS). */
+export class ImageError extends Error {
+  constructor(
+    public kind: ImageErrorKind,
+    message: string,
+  ) {
+    super(message);
+    this.name = "ImageError";
+  }
+}
+
 /**
- * Reduce la imagen en cliente (FR-4). Si el navegador no puede decodificarla,
- * devuelve el original (el servidor valida tipo y tamaño).
+ * Reduce la imagen en cliente (FR-4) y SIEMPRE la recodifica con canvas: así se eliminan los
+ * metadatos EXIF/GPS (privacidad). Si no se puede decodificar o recodificar, lanza ImageError
+ * en lugar de devolver el original.
  */
 export async function compressImage(file: Blob, maxSide = MAX_IMAGE_SIDE, quality = 0.82): Promise<Blob> {
+  let bitmap: ImageBitmap;
   try {
-    const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+    bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
+  } catch {
+    throw new ImageError("decode", "cannot decode image");
+  }
+  try {
     const { width, height } = fitWithin(bitmap.width, bitmap.height, maxSide);
     const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
     const ctx = canvas.getContext("2d");
-    if (!ctx) return file;
+    if (!ctx) throw new ImageError("canvas", "no 2d context");
     ctx.drawImage(bitmap, 0, 0, width, height);
-    bitmap.close();
     const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
-    if (!blob) return file;
-    return blob.size < file.size || !isAllowedType(file.type) ? blob : file;
-  } catch {
-    return file;
+    if (!blob) throw new ImageError("encode", "cannot encode image");
+    return blob;
+  } catch (e) {
+    if (e instanceof ImageError) throw e;
+    throw new ImageError("canvas", "canvas error");
+  } finally {
+    bitmap.close();
   }
 }

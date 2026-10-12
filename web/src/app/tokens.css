@@ -5,7 +5,10 @@
    ========================================================== */
 /* [web/] Se quitó la línea @import url(...) de Google Fonts: las fuentes se cargan con next/font (Opción B, §4.2). */
 
+/* Decisión: la app es solo tema claro (no hay variante oscura); se declara para que el
+   navegador no oscurezca controles nativos ni aplique modo oscuro forzado. */
 :root {
+  color-scheme: light;
   /* --- Paleta base ---------------------------------------- */
   --eq-lima:      #B6FF3B; /* Lima Edén — naturaleza, éxito, CTA principal */
   --eq-amarillo:  #FFE600; /* Amarillo Voltio — XP, atención, "No confirmado" */
@@ -92,4 +95,7 @@
 /* Utilidades base opcionales */
 .eq-brutal { border: var(--eq-border) solid var(--eq-tinta); box-shadow: var(--eq-shadow); border-radius: 0; }
 .eq-press:active { transform: var(--eq-press); box-shadow: none; }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+}

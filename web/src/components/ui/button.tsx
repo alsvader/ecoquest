@@ -11,11 +11,13 @@ const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2.5 rounded-none border-4 border-tinta text-tinta",
     "font-display text-lg text-center select-none cursor-pointer",
-    "shadow-brutal transition-[transform,box-shadow] duration-snap",
-    "hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[7px_7px_0_0_#000]",
+    "shadow-brutal transition-[transform,box-shadow] duration-snap motion-reduce:transition-none",
+    // Hover solo en dispositivos con puntero real: en táctil deja el botón "pegado" tras el toque.
+    "[@media(hover:hover)]:hover:-translate-x-0.5 [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-[7px_7px_0_0_#000]",
     "active:translate-x-press active:translate-y-press active:shadow-none",
     "data-[pressed=true]:translate-x-press data-[pressed=true]:translate-y-press data-[pressed=true]:shadow-none",
-    "focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-turbo",
+    // Doble anillo: contorno tinta + anillo blanco interior, visible sobre cualquier fondo de la paleta.
+    "focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-tinta focus-visible:ring-2 focus-visible:ring-white",
     "disabled:cursor-not-allowed disabled:border-dashed disabled:bg-[#E8E4D6] disabled:text-[#555555]",
     "disabled:shadow-none disabled:translate-x-0 disabled:translate-y-0",
   ].join(" "),
@@ -27,11 +29,13 @@ const buttonVariants = cva(
         ia: "bg-glitch",
         logro: "bg-turbo",
         ghost:
-          "bg-transparent border-dashed shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-none active:translate-x-0 active:translate-y-0",
+          "bg-transparent border-dashed shadow-none [@media(hover:hover)]:hover:translate-x-0 [@media(hover:hover)]:hover:translate-y-0 [@media(hover:hover)]:hover:shadow-none active:translate-x-0 active:translate-y-0",
+        // Acción destructiva (borrar): tinta con texto blanco, distinta del resto de variantes.
+        destructive: "bg-tinta text-white",
       },
       size: {
         default: "min-h-tap px-6 py-3", // 56 px
-        sm: "min-h-12 px-4 py-2 text-sm", // 48 px, 16 px
+        sm: "min-h-12 px-4 py-2 text-base", // alto mínimo 48 px, texto 16 px
       },
       block: { true: "w-full", false: "" },
     },
@@ -44,6 +48,8 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   /** Fuerza el estado "presionado" (demos o toggles). */
   pressed?: boolean;
+  /** Ref al <button> (React 19 lo pasa como prop). */
+  ref?: React.Ref<HTMLButtonElement>;
 }
 
 export function Button({ className, variant, size, block, pressed, type = "button", ...props }: ButtonProps) {

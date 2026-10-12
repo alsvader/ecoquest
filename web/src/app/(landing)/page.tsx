@@ -18,6 +18,23 @@ export const metadata: Metadata = {
   title: "EcoQuest · Guarda el teléfono. El parque es el nivel.",
   description:
     "EcoQuest convierte una caminata en una expedición de ~20 minutos: tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos; tú pones los pasos.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    locale: "es_MX",
+    siteName: "EcoQuest",
+    url: "/",
+    title: "EcoQuest · Guarda el teléfono. El parque es el nivel.",
+    description:
+      "Una expedición de ~20 minutos con tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "EcoQuest · Guarda el teléfono. El parque es el nivel.",
+    description:
+      "Una expedición de ~20 minutos con tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos.",
+  },
+  // Imagen OG/Twitter: src/app/opengraph-image.png y twitter-image.png (convención de archivos de Next).
 };
 
 export default function LandingPage() {
@@ -25,7 +42,7 @@ export default function LandingPage() {
     <>
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:border-4 focus:border-tinta focus:bg-voltio focus:px-4 focus:py-3 focus:font-bold focus:shadow-brutal">Saltar al contenido</a>
       <Navbar />
-      <main id="contenido">
+      <main id="contenido" tabIndex={-1} className="outline-none">
       <Hero />
       <Problema />
       <ComoSeJuega />

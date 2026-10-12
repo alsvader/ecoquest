@@ -38,11 +38,11 @@ export function Insignia({
           ) : (
             <>
               <PixelIcon name="tree" scale={size === "sm" ? 3 : 5} flat />
-              {/* TODO(diseño): en sm el nombre usa un cuerpo menor al de text-pixel-sm para caber en el rombo interior, como en la referencia. */}
+              {/* TODO(diseño): en sm el nombre usa 11 px (menor que text-pixel-sm) para caber en el rombo interior, como en la referencia. */}
               <span
                 className={cn(
                   "font-pixel font-bold uppercase",
-                  size === "sm" ? "max-w-[64px] text-[9px] leading-[1.3]" : "text-pixel-sm leading-[1.5]",
+                  size === "sm" ? "max-w-[72px] text-[11px] leading-[1.3]" : "text-pixel-sm leading-[1.5]",
                 )}
               >
                 {name}

@@ -75,9 +75,9 @@ export function IaAbierta() {
           <div>
             {/* Bloque 3: estados */}
             <h3 className="text-[30px] leading-tight sm:text-[34px]">Cuatro resultados posibles. Todos honestos.</h3>
-            <ul className="mt-7 grid gap-6 md:grid-cols-2">
+            <ul role="list" className="mt-7 grid gap-6 md:grid-cols-2">
               <li className="card p-5">
-                <span className="status bg-lima text-[17px]"><span className="s-ico" aria-hidden="true">✓</span>Coincidencia</span>
+                <span className="status bg-lima text-[17px]"><span className="s-ico" aria-hidden="true"><Icon name="check" size={20} /></span>Coincidencia</span>
                 <p className="mt-3.5 text-[17px] leading-snug"><b>«Parece una hoja. ¡Misión completada!»</b> Es tentativa: significa <i>se parece</i>, no <i>está verificado</i>.</p>
               </li>
               <li className="card p-5">
@@ -85,11 +85,11 @@ export function IaAbierta() {
                 <p className="mt-3.5 text-[17px] leading-snug"><b>«No estamos seguros. ¿Otra foto?»</b> La IA no encontró suficiente parecido.</p>
               </li>
               <li className="card p-5">
-                <span className="status bg-lava text-[17px]"><span className="s-ico" aria-hidden="true">↻</span>Reintentar</span>
+                <span className="status bg-lava text-[17px]"><span className="s-ico" aria-hidden="true"><Icon name="retry" size={20} /></span>Reintentar</span>
                 <p className="mt-3.5 text-[17px] leading-snug"><b>«No pudimos analizar la foto. Inténtalo de nuevo.»</b> Falló la red, el servicio o la imagen.</p>
               </li>
               <li className="card p-5">
-                <span className="status bg-turbo text-[17px]"><span className="s-ico" aria-hidden="true">✋</span><span>Revisión manual<small className="block text-[12px] font-bold uppercase tracking-[0.5px]">No verificada</small></span></span>
+                <span className="status bg-turbo text-[17px]"><span className="s-ico" aria-hidden="true"><Icon name="hand" size={20} /></span><span>Revisión manual<small className="block text-[12px] font-bold uppercase tracking-[0.5px]">No verificada</small></span></span>
                 <p className="mt-3.5 text-[17px] leading-snug">Tú marcas la misión y queda etiquetada así en tu progreso, resumen e insignia. Sin trampas escondidas.</p>
               </li>
             </ul>
@@ -97,7 +97,7 @@ export function IaAbierta() {
             {/* Bloque 4: lo que la IA no hace */}
             <div className="card card-lg mt-10">
               <h3 className="text-[26px] leading-tight">Lo que la IA no hace</h3>
-              <ul className="mt-3 text-[17px] font-medium">
+              <ul role="list" className="mt-3 text-[17px] font-medium">
                 <li className="li-x">No identifica especies ni da nombres científicos.</li>
                 <li className="li-x">No convierte el parecido en un porcentaje de certeza.</li>
                 <li className="li-x">No mide cuánto caminaste ni tu tiempo fuera de pantalla.</li>
@@ -105,7 +105,7 @@ export function IaAbierta() {
               </ul>
             </div>
 
-            <p className="mt-8 border-l-4 border-tinta pl-4 text-sm leading-relaxed">Modelo de referencia: <code className="break-all bg-tinta px-1.5 py-px font-mono text-[15px] text-lima">google/siglip2-base-patch16-256</code> (variante final [Por definir]). Licencia de los pesos: [Por definir]. Inferencia en servidor con Python + Transformers; proveedor de hospedaje [Por definir]. Pesos abiertos no significa offline: por ahora necesitas conexión.</p>
+            <p className="mt-8 border-l-4 border-tinta pl-4 text-sm leading-relaxed">Modelo de referencia: <code className="break-all bg-tinta px-1.5 py-px font-mono text-[15px] text-lima">google/siglip2-base-patch16-256</code> (variante final por confirmar). La licencia de los pesos está en su ficha de Hugging Face. Inferencia en servidor con Python + Transformers. Pesos abiertos no significa offline: por ahora necesitas conexión.</p>
             <div className="mt-8">
               <a className="btn btn-sec" href={REPO_URL}>Ver cómo está hecho</a>
             </div>
