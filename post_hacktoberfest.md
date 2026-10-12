@@ -29,9 +29,7 @@ It is for people who already walk, garden, or spend time in parks and want a lig
 
 ## Demo
 
-<!-- TODO before publishing: upload video/out/ecoquest-promo.mp4 (YouTube, unlisted or public) and replace VIDEO_ID below. -->
-
-{% youtube VIDEO_ID %}
+{% youtube c11c0NfN7Dg %}
 
 A 76-second walkthrough of EcoQuest. Every app screen in it is a real screenshot of the app running locally, and the classifier output is the real `/classify` response from SigLIP2 for three test photos. It is a motion-design video, not footage from the park.
 
