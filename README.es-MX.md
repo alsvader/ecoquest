@@ -14,11 +14,11 @@ MVP en desarrollo. Lo que existe hoy y lo que falta:
 
 | Parte | Estado |
 |---|---|
-| Servicio de inferencia (`inference/`) | Implementado; 20 tests; probado con el modelo real y con imágenes sintéticas |
+| Servicio de inferencia (`inference/`) | Implementado; 27 tests; probado con el modelo real y con imágenes sintéticas |
 | App web móvil / PWA (`web/`) | Implementada con el diseño v2; 36 tests; flujo probado de punta a punta contra el servicio real en un navegador headless a 390 px |
 | Calibración de umbrales (Fase 0) | **Preliminar.** Ajustados con 42 fotos de Wikimedia Commons (no del parque ni de un teléfono) y con prompts negativos elegidos viendo esas mismas fotos; sin validar con fotos reales del parque |
 | Prueba en exterior en Villahermosa (Fase 3) | **Pendiente.** Aún no se ha probado en un teléfono real ni al aire libre |
-| Dockerfile / despliegue | Sin probar |
+| Dockerfiles / despliegue | Imágenes construidas y ejecutadas en local (arm64) con `docker compose`; recursos del servidor medidos, ver [docs/despliegue.md](docs/despliegue.md). **No se ha desplegado ni probado en un proveedor de hosting ni en x86_64** |
 
 Esto no es un producto terminado: los resultados del modelo son estimaciones y su calidad con fotos reales no está medida.
 
@@ -69,7 +69,44 @@ ecoquest/
 
 ## Puesta en marcha local
 
-Requisitos: Node.js 20+ y Python 3.12. El primer arranque del servicio descarga ~1.5 GB de pesos a la caché de Hugging Face.
+### Opción A: Docker (los dos servicios)
+
+Requiere Docker Desktop (o Docker Engine con Compose v2). **No** necesitas Node.js ni Python.
+
+```bash
+docker compose up --build -d     # construye las imágenes y levanta ambos servicios
+```
+
+Después abre **http://localhost:3000** (landing en `/`, la app en `/jugar`). Usa `localhost`, no `127.0.0.1`: CORS solo permite el origen `http://localhost:3000`.
+
+```bash
+docker compose ps                # estado y salud de cada servicio
+docker compose logs -f inference # logs del servicio de IA
+docker compose down              # detiene y quita los contenedores (las imágenes se conservan)
+```
+
+- **Primera construcción:** ~8 minutos, porque descarga ~1.5 GB de pesos del modelo; las siguientes usan la caché. La imagen de inferencia pesa 4.58 GB y la de la web, 305 MB. El conjunto queda sano ~15 s después de arrancar.
+- **Recursos:** la inferencia recibe por defecto 1.5 GB y 2 CPUs; la web, 512 MB y 1 CPU. El kernel mata el servicio de inferencia con 640 MB y necesita ~1 GB como mínimo (se recomiendan 2 GB); ver [docs/despliegue.md](docs/despliegue.md).
+- **Puertos:** se publican solo en `127.0.0.1`. Otros dispositivos (un teléfono) no pueden alcanzarlos, y la cámara del teléfono requiere HTTPS, así que probar en un teléfono exige un servidor o un túnel con HTTPS (no probado).
+
+La configuración son variables de entorno, por ejemplo `INFERENCE_CPUS=4 docker compose up -d`:
+
+| Variable | Por defecto | Qué hace |
+|---|---|---|
+| `PUBLIC_API_URL` | `http://localhost:8000` | URL de la API **tal como la ve el navegador**. Se incorpora a la imagen web al construirla: reconstruye (`--build`) si la cambias |
+| `ALLOWED_ORIGINS` | `http://localhost:3000` | Orígenes que permite el CORS de la API; debe coincidir con la URL de la web |
+| `RATE_LIMIT_PER_MINUTE` | `30` | Peticiones por minuto por cliente a `/classify` |
+| `TRUST_PROXY` | `false` | Ponlo en `true` detrás de un proxy inverso; si no, todos los usuarios comparten una IP para el límite de tasa |
+| `INFERENCE_MEM` / `INFERENCE_CPUS` | `1536m` / `2` | Límites del contenedor de inferencia |
+| `WEB_MEM` / `WEB_CPUS` | `512m` / `1` | Límites del contenedor web |
+
+Problemas frecuentes: si el puerto 3000 u 8000 está ocupado (por ejemplo por un servidor de desarrollo), detén ese proceso o cambia el mapeo de puertos en `compose.yaml`. Si la app llama a otra URL de la API, reconstruye con el `PUBLIC_API_URL` correcto.
+
+Probado solo en arm64 con Docker Desktop; no en x86_64 ni en un proveedor de hosting.
+
+### Opción B: sin Docker (desarrollo)
+
+Requisitos: Node.js 20.9+ y Python 3.12. El primer arranque del servicio descarga ~1.5 GB de pesos a la caché de Hugging Face.
 
 **1. Servicio de inferencia**
 
@@ -108,6 +145,18 @@ Los umbrales por misión viven en `inference/app/thresholds.json` y son **provis
 2. Ejecuta `python scripts/benchmark.py samples --csv resultados.csv` desde `inference/`.
 3. Ajusta los umbrales y copia el mismo valor a `web/src/data/expedition.ts` (hoy es un valor espejo mantenido a mano, usado solo para dibujar la línea de umbral).
 
+**Reproducir las cifras de este README.** Las fotos usadas hasta ahora (42 de calibración y 29 de validación) son de Wikimedia Commons y **no están en el repositorio**, porque sus licencias Creative Commons exigen atribución. La lista de cada foto (autor, licencia, URL de origen y `sha256`) sí se versiona en `inference/samples_external/ATTRIBUTION.csv` y `inference/samples_validation/ATTRIBUTION.csv`. Para descargarlas y repetir el benchmark:
+
+```bash
+cd inference
+python scripts/download_samples.py samples_external
+python scripts/download_samples.py samples_validation
+python scripts/benchmark.py samples_external      # conjunto de calibración
+python scripts/benchmark.py samples_validation    # conjunto de validación (no ajustes con él)
+```
+
+El descargador solo acepta https desde dominios de Wikimedia, valida cada archivo y avisa si una miniatura ya no coincide con su `sha256`. En la última ejecución ambos conjuntos se descargaron con hashes idénticos y el benchmark reprodujo 41/42 (calibración) y 28/29 (validación). Cada foto conserva su licencia y exige atribución si la reutilizas.
+
 ## Privacidad y seguridad
 
 - Sin cuentas y sin ubicación. Progreso, fotos y registro de la sesión viven en IndexedDB de tu dispositivo.
@@ -125,7 +174,7 @@ Cuentas, rankings, generación ilimitada de misiones con IA, reconocimiento de e
 - Umbrales sin calibrar y sin evaluación con fotos reales; pueden aparecer falsos positivos y falsos negativos.
 - Límite de tasa del servicio en memoria y por proceso (no se comparte entre réplicas).
 - PWA básica: manifest e icono, sin service worker ni modo offline.
-- Dockerfile sin construir ni probar; sin medición de latencia en hardware de producción (en CPU local fue de ~80–105 ms por imagen, sin contar red).
+- Necesidades del servidor medidas solo en arm64 con Docker Desktop: el servicio de inferencia necesita al menos ~1 GB de RAM (el kernel lo mata con 640 MB; se recomiendan 2 GB) y tarda ~0.5 s por foto con 2 vCPUs o ~1.6 s con 1 vCPU, sin contar la red. Nada medido en x86_64 ni en un proveedor de hosting (detalle en [docs/despliegue.md](docs/despliegue.md)).
 - Sin pruebas con lectores de pantalla, en dispositivo real ni a 360 px de ancho.
 
 ## Licencias y créditos

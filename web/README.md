@@ -33,6 +33,18 @@ npm run lint && npm run typecheck && npm test && npm run build
 - `src/components/ui/button.tsx` y `src/components/eq/*` — componentes del sistema de diseño (Button, EqCard, MissionCard, StatusBadge, XpBar, Insignia, EqToast, SafetyNotice, Sticker, PixelIcon, Hud, IaChip, PhotoFrame, Screen).
 - `src/app/` — pantallas (`/`, `/expedicion`, `/sesion`, `/mision/[id]`, `/resumen`, `/datos`), `manifest.ts`, `icon.svg`.
 
+## Docker
+
+`web/Dockerfile` construye la app en dos etapas (`output: "standalone"`), corre como usuario no root y pesa ~305 MB; en ejecución usa ~48 MB de memoria y arranca en ~2 s.
+
+```bash
+docker build --build-arg NEXT_PUBLIC_API_URL=https://api.tu-dominio.example \
+             --build-arg NEXT_PUBLIC_MOCK_API=false -t ecoquest-web .
+docker run -p 3000:3000 ecoquest-web
+```
+
+`NEXT_PUBLIC_API_URL` se incorpora **al construir** (también define el origen permitido por la política de seguridad `connect-src`): si cambia la URL de la API, hay que reconstruir la imagen. `NEXT_PUBLIC_MOCK_API=true` no está permitido en producción. El build descarga las fuentes de Google (necesita red). Para levantar la web y la inferencia juntas, usa `docker compose up --build` desde la raíz del repositorio.
+
 ## Privacidad
 
 Sin cuentas ni ubicación. Progreso, fotos y registro viven en IndexedDB del dispositivo. `/datos` permite exportar el registro (JSON) y **borrar todo**. El servidor solo recibe la foto reducida para inferir; no se guarda.

@@ -14,7 +14,7 @@ MVP in development. What exists today and what is still missing:
 
 | Part | Status |
 |---|---|
-| Inference service (`inference/`) | Implemented; 20 tests; tested with the real model and with synthetic images |
+| Inference service (`inference/`) | Implemented; 27 tests; tested with the real model and with synthetic images |
 | Mobile web app / PWA (`web/`) | Implemented with the v2 design; 36 tests; full flow tested end to end against the real service in a headless browser at 390 px |
 | Threshold calibration (Phase 0) | **Preliminary.** Tuned with 42 Wikimedia Commons photos (not from the park, not taken with a phone), and with negative prompts chosen while looking at those same photos; not validated with real park photos |
 | Outdoor test in Villahermosa (Phase 3) | **Pending.** Not yet tested on a real phone or outdoors |
@@ -71,6 +71,43 @@ ecoquest/
 
 ## Running locally
 
+### Option A: Docker (both services)
+
+Requires Docker Desktop (or Docker Engine with Compose v2). You do **not** need Node.js or Python.
+
+```bash
+docker compose up --build -d     # build the images and start both services
+```
+
+Then open **http://localhost:3000** (landing page at `/`, the app at `/jugar`). Use `localhost`, not `127.0.0.1`: CORS only allows the origin `http://localhost:3000`.
+
+```bash
+docker compose ps                # status and health of each service
+docker compose logs -f inference # logs of the AI service
+docker compose down              # stop and remove the containers (images are kept)
+```
+
+- **First build:** ~8 minutes, because it downloads ~1.5 GB of model weights; later builds use the cache. The inference image is 4.58 GB and the web image 305 MB. The stack is healthy ~15 s after starting.
+- **Resources:** inference gets 1.5 GB and 2 CPUs by default, web 512 MB and 1 CPU. The inference service is killed by the kernel at 640 MB and needs ~1 GB at minimum (2 GB recommended); see [docs/despliegue.md](docs/despliegue.md).
+- **Ports** are published on `127.0.0.1` only. Other devices (a phone) cannot reach them, and the phone camera needs HTTPS, so testing on a phone requires a server or tunnel with HTTPS (not tested).
+
+Settings are environment variables, for example `INFERENCE_CPUS=4 docker compose up -d`:
+
+| Variable | Default | What it does |
+|---|---|---|
+| `PUBLIC_API_URL` | `http://localhost:8000` | URL of the API **as the browser sees it**. It is baked into the web image at build time: rebuild (`--build`) after changing it |
+| `ALLOWED_ORIGINS` | `http://localhost:3000` | Origins allowed by the API's CORS; must match the URL of the web app |
+| `RATE_LIMIT_PER_MINUTE` | `30` | Requests per minute per client to `/classify` |
+| `TRUST_PROXY` | `false` | Set to `true` behind a reverse proxy, otherwise every user shares one IP for rate limiting |
+| `INFERENCE_MEM` / `INFERENCE_CPUS` | `1536m` / `2` | Limits for the inference container |
+| `WEB_MEM` / `WEB_CPUS` | `512m` / `1` | Limits for the web container |
+
+Troubleshooting: if port 3000 or 8000 is taken (for example by a dev server), stop that process or change the port mapping in `compose.yaml`. If the app calls the wrong API URL, rebuild with the right `PUBLIC_API_URL`.
+
+Tested only on arm64 with Docker Desktop; not on x86_64 or on a hosting provider.
+
+### Option B: without Docker (development)
+
 Requirements: Node.js 20.9+ and Python 3.12. The first start of the service downloads ~1.5 GB of weights into the Hugging Face cache.
 
 **1. Inference service**
@@ -97,8 +134,6 @@ npm run dev                              # http://localhost:3000
 `NEXT_PUBLIC_*` variables are baked in at build time: if you change the mode, rebuild (`npm run build`). To test the camera on a real phone, the page must be served over HTTPS or from the same network with an origin allowed in `ALLOWED_ORIGINS`.
 
 Checks for each part: `web`: `npm run lint && npm run typecheck && npm test && npm run build`; `inference`: `pytest`.
-
-With Docker: `docker compose up --build` starts both services (web on `http://localhost:3000`, API on `http://localhost:8000`); the first build downloads ~1.5 GB of model weights. `NEXT_PUBLIC_API_URL` is baked into the web image, so set `PUBLIC_API_URL` to the public URL of the API before building for a server.
 
 ## API contract
 

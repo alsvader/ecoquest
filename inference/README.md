@@ -77,10 +77,17 @@ Ojo: el log de acceso de uvicorn registra método y ruta, no cuerpos.
 
 ```bash
 docker build -t ecoquest-inference .
-docker run -p 8000:8000 -e ALLOWED_ORIGINS=https://tu-app.vercel.app ecoquest-inference
+docker run -p 8000:8000 --memory 2g --cpus 2 \
+  -e ALLOWED_ORIGINS=https://tu-app.vercel.app ecoquest-inference
 ```
-La imagen descarga los pesos en build. La inferencia en CPU es viable pero no se ha medido en contenedor;
-no la despliegues en funciones serverless convencionales. El Dockerfile no se ha construido/probado aquí.
+
+Para levantar este servicio junto con la web, usa `docker compose up --build` desde la raíz del repositorio (ver el README raíz).
+
+- La imagen descarga los pesos al construirse y arranca sin red (`HF_HUB_OFFLINE=1`): 4.58 GB, lista en ~5–14 s. Los pesos se descargan **antes** de copiar `app/`, así que un cambio de código no repite la descarga de ~1.5 GB.
+- Corre como usuario no root (UID 1001) y tiene `HEALTHCHECK` sobre `/health`.
+- **Recursos medidos** (arm64, Docker Desktop, PyTorch en CPU): con 640 MB el kernel lo mata al arrancar; con ~1 GB funciona pero sin margen (la memoria real del proceso es ~750–790 MB); se recomiendan 2 GB. Latencia por foto: ~1.6 s con 1 vCPU, ~0.5 s con 2 y ~0.2 s con 4. Atiende una foto a la vez. Detalle en [../docs/despliegue.md](../docs/despliegue.md).
+- Detrás de un proxy inverso activa `TRUST_PROXY=true` (si no, el límite de tasa ve una sola IP).
+- No la despliegues en funciones serverless convencionales. No se ha probado en x86_64 ni en un proveedor de hosting.
 
 ## Licencias
 
