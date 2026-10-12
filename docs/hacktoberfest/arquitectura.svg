@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="t d" font-family="Arial, Helvetica, sans-serif">
+  <title id="t">EcoQuest architecture</title>
+  <desc id="d">A phone runs the Next.js PWA. It sends a downscaled photo to a FastAPI service that runs SigLIP2 on the server and returns a status. Progress is stored in IndexedDB on the phone.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+    </marker>
+  </defs>
+  <rect width="960" height="420" fill="#FFFBEA"/>
+
+  <!-- Phone / PWA -->
+  <rect x="30" y="110" width="250" height="200" fill="#000" transform="translate(8 8)"/>
+  <rect x="30" y="110" width="250" height="200" fill="#B6FF3B" stroke="#000" stroke-width="4"/>
+  <text x="155" y="150" text-anchor="middle" font-size="22" font-weight="700">Phone</text>
+  <text x="155" y="180" text-anchor="middle" font-size="16">Next.js PWA (TypeScript)</text>
+  <text x="155" y="206" text-anchor="middle" font-size="14">Photo downscaled to 1024 px</text>
+  <text x="155" y="262" text-anchor="middle" font-size="14" font-weight="700">IndexedDB: progress,</text>
+  <text x="155" y="280" text-anchor="middle" font-size="14" font-weight="700">photos, session log</text>
+
+  <!-- Inference server -->
+  <rect x="355" y="110" width="250" height="200" fill="#000" transform="translate(8 8)"/>
+  <rect x="355" y="110" width="250" height="200" fill="#00E5FF" stroke="#000" stroke-width="4"/>
+  <text x="480" y="150" text-anchor="middle" font-size="22" font-weight="700">Inference API</text>
+  <text x="480" y="180" text-anchor="middle" font-size="16">FastAPI · POST /classify</text>
+  <text x="480" y="206" text-anchor="middle" font-size="14">Validates, rate-limits,</text>
+  <text x="480" y="224" text-anchor="middle" font-size="14">never writes images to disk</text>
+  <text x="480" y="262" text-anchor="middle" font-size="14" font-weight="700">Docker, non-root, health check</text>
+
+  <!-- Model -->
+  <rect x="680" y="110" width="250" height="200" fill="#000" transform="translate(8 8)"/>
+  <rect x="680" y="110" width="250" height="200" fill="#FF3EA5" stroke="#000" stroke-width="4"/>
+  <text x="805" y="150" text-anchor="middle" font-size="22" font-weight="700">SigLIP2</text>
+  <text x="805" y="180" text-anchor="middle" font-size="14">google/siglip2-base-patch16-256</text>
+  <text x="805" y="206" text-anchor="middle" font-size="14">Open weights · Apache-2.0</text>
+  <text x="805" y="262" text-anchor="middle" font-size="14" font-weight="700">Zero-shot: image vs. text prompts</text>
+  <text x="805" y="280" text-anchor="middle" font-size="14" font-weight="700">per mission + distractors</text>
+
+  <!-- Arrows -->
+  <line x1="282" y1="210" x2="353" y2="210" stroke="#000" stroke-width="4" marker-end="url(#arr)"/>
+  <text x="318" y="198" text-anchor="middle" font-size="13" font-weight="700">photo</text>
+  <line x1="355" y1="250" x2="282" y2="250" stroke="#000" stroke-width="4" marker-end="url(#arr)"/>
+  <text x="318" y="278" text-anchor="middle" font-size="13" font-weight="700">status</text>
+  <line x1="607" y1="210" x2="678" y2="210" stroke="#000" stroke-width="4" marker-end="url(#arr)"/>
+  <text x="643" y="198" text-anchor="middle" font-size="13" font-weight="700">logits</text>
+
+  <!-- Footer note -->
+  <text x="480" y="368" text-anchor="middle" font-size="16" font-weight="700">The model estimates, the server applies per-mission thresholds, and the user can mark a mission by hand.</text>
+  <text x="480" y="394" text-anchor="middle" font-size="14">Scores are similarity, not calibrated probabilities. No accounts, no location.</text>
+</svg>
