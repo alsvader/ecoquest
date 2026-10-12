@@ -5,7 +5,13 @@ __pycache__/
 samples/
 benchmark_out/
 .env
-samples_external/
-samples_validation/
+# Fotos externas: no se versionan las imagenes (licencias CC con atribucion), solo su lista.
+# Recuperalas con: python scripts/download_samples.py samples_external
+samples_external/*
+!samples_external/ATTRIBUTION.csv
+!samples_external/README.md
+samples_validation/*
+!samples_validation/ATTRIBUTION.csv
+!samples_validation/README.md
 
 samples_park/

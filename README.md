@@ -112,6 +112,18 @@ Per-mission thresholds live in `inference/app/thresholds.json` and are **provisi
 2. From `inference/`, run `python scripts/benchmark.py samples --csv results.csv`.
 3. Adjust the thresholds and copy the same values to `web/src/data/expedition.ts` (currently a mirror value kept by hand, used only to draw the threshold line).
 
+**Reproducing the numbers in this README.** The photos used so far (42 for calibration, 29 for validation) are from Wikimedia Commons and are **not stored in the repository** because their Creative Commons licenses require attribution. The list of each photo (author, license, source URL, `sha256`) is versioned in `inference/samples_external/ATTRIBUTION.csv` and `inference/samples_validation/ATTRIBUTION.csv`. To fetch them and re-run the benchmark:
+
+```bash
+cd inference
+python scripts/download_samples.py samples_external
+python scripts/download_samples.py samples_validation
+python scripts/benchmark.py samples_external      # calibration set
+python scripts/benchmark.py samples_validation    # validation set (do not tune on it)
+```
+
+The downloader only accepts HTTPS from Wikimedia domains, validates each file, and warns if a thumbnail no longer matches its `sha256`. When last run, both sets downloaded with identical hashes and the benchmark reproduced 41/42 (calibration) and 28/29 (validation). Each photo keeps its own license and needs attribution if you reuse it.
+
 ## Privacy and security
 
 - No accounts and no location. Progress, photos, and the session log live in IndexedDB on your device.

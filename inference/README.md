@@ -55,6 +55,18 @@ python scripts/benchmark.py samples --csv resultados.csv
 Reporta scores por imagen, matriz de confusión, estado por misión, falsos positivos de distractores y latencia
 (media/mediana/p95/máx; solo inferencia, tras calentamiento). `samples/` está en `.gitignore`: aporta fotos con derechos propios.
 
+Las fotos externas usadas hasta ahora (calibración: `samples_external/`, 42; validación: `samples_validation/`, 29) vienen de
+Wikimedia Commons y **no se versionan** (licencias CC con atribución); sí se versiona su lista (`ATTRIBUTION.csv`, con autor,
+licencia, URL y `sha256`). Para recuperarlas y reproducir el benchmark:
+
+```bash
+python scripts/download_samples.py samples_external
+python scripts/download_samples.py samples_validation
+```
+
+El script solo acepta https desde dominios de Wikimedia, valida cada archivo y avisa si el `sha256` no coincide. `samples_park/`
+(fotos propias del parque) sigue ignorada por completo.
+
 ## Privacidad
 
 Las imágenes se procesan solo en memoria: no se escriben a disco (se ajusta el umbral de spooling de Starlette
