@@ -136,11 +136,68 @@ html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   .faq summary { @apply flex min-h-tap cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 font-display text-[19px] leading-tight sm:text-[21px]; }
   .faq .plus { @apply flex h-12 w-12 flex-none items-center justify-center border-3 border-tinta bg-voltio; }
   .faq[open] .plus { @apply bg-lima; }
+  .faq .plus img { transition: transform 200ms var(--eq-ease); }
   .faq[open] .plus img { transform: rotate(45deg); }
+  /* Despliegue progresivo (Chrome/Safari recientes): entra 260 ms, sale 180 ms. En otros navegadores abre/cierra en seco. */
+  .faq::details-content { block-size: 0; overflow: clip; opacity: 0;
+    transition: block-size 180ms var(--eq-ease), opacity 120ms ease-out, content-visibility 180ms allow-discrete; }
+  .faq[open]::details-content { block-size: auto; opacity: 1;
+    transition: block-size 260ms var(--eq-ease), opacity 220ms ease-out 40ms, content-visibility 260ms allow-discrete; }
   .faq .ans { @apply border-t-3 border-tinta px-5 pb-5 pt-4 text-[18px] leading-normal; }
 
   }
 }
+
+/* ——— Movimiento de la landing ———
+   Curva fuerte de salida (entra rápido, asienta suave). Solo transform/opacity. Todo se apaga con prefers-reduced-motion
+   (regla global de arriba); `motion.tsx` ni siquiera oculta nada en ese caso. */
+html:has(.landing) { interpolate-size: allow-keywords; }
+.landing { --eq-ease: cubic-bezier(0.23, 1, 0.32, 1); }
+
+/* Revelado al scroll: estado oculto solo si JS lo marcó (data-reveal). */
+.landing [data-reveal] { opacity: 0; transform: translateY(28px); }
+.landing [data-reveal].is-in {
+  opacity: 1; transform: none;
+  transition: opacity 700ms var(--eq-ease) var(--reveal-delay, 0ms), transform 700ms var(--eq-ease) var(--reveal-delay, 0ms);
+}
+
+/* Hero: entrada al cargar, en CSS puro (sin parpadeo ni hidratación). */
+@keyframes eq-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes eq-pop { from { opacity: 0; transform: translateY(14px) scale(0.94); } to { opacity: 1; transform: none; } }
+@keyframes eq-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes eq-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
+
+.landing #inicio .wrap > div:first-child > * { animation: eq-rise 840ms var(--eq-ease) both; }
+.landing #inicio .wrap > div:first-child > :nth-child(2) { animation-delay: 105ms; }
+.landing #inicio .wrap > div:first-child > :nth-child(3) { animation-delay: 210ms; }
+.landing #inicio .wrap > div:first-child > :nth-child(4) { animation-delay: 315ms; }
+.landing #inicio .wrap > div:first-child > :nth-child(5) { animation-delay: 420ms; }
+.landing #inicio .wrap > div:first-child > :nth-child(6) { animation-delay: 510ms; }
+
+.landing #inicio .wrap > div:last-child > :not(:last-child) { animation: eq-pop 840ms var(--eq-ease) both; animation-delay: 300ms; }
+.landing #inicio .wrap > div:last-child > figure { animation-delay: 180ms; }
+.landing #inicio .wrap > div:last-child > :nth-child(2) { animation-delay: 570ms; }
+.landing #inicio .wrap > div:last-child > :nth-child(3) { animation-delay: 675ms; }
+.landing #inicio .wrap > div:last-child > :nth-child(4) { animation-delay: 780ms; }
+.landing #inicio .wrap > div:last-child > :nth-child(6) { animation-delay: 900ms; }
+.landing #inicio .sticker { animation: eq-pop 720ms var(--eq-ease) both; }
+.landing #inicio .sticker:nth-of-type(1) { animation-delay: 840ms; }
+.landing #inicio .sticker:nth-of-type(2) { animation-delay: 960ms; }
+.landing #inicio .sticker:nth-of-type(3) { animation-delay: 1080ms; }
+.landing #inicio .xp-cont .fill { transform-origin: left; animation: eq-fill 1350ms var(--eq-ease) 975ms both; }
+
+/* Azulejos decorativos del hero: flotan despacio después de entrar (solo xl, donde son collage). */
+@media (min-width: 1280px) {
+  .landing #inicio .wrap > div:last-child > :nth-child(2) { animation: eq-pop 840ms var(--eq-ease) 570ms both, eq-float 6s ease-in-out 1.4s infinite; }
+  .landing #inicio .wrap > div:last-child > :nth-child(3) { animation: eq-pop 840ms var(--eq-ease) 675ms both, eq-float 7s ease-in-out 1.6s infinite reverse; }
+  .landing #inicio .wrap > div:last-child > :nth-child(4) { animation: eq-pop 840ms var(--eq-ease) 780ms both, eq-float 5.5s ease-in-out 1.5s infinite; }
+}
+
+/* Menú móvil: sale rápido, entra un poco más despacio; `visibility` retrasada para no cortar la salida. */
+.landing .menu-movil { visibility: hidden; opacity: 0; transform: translateY(-8px);
+  transition: opacity 140ms ease-out, transform 140ms ease-out, visibility 0s linear 140ms; }
+.landing .menu-movil[data-open="true"] { visibility: visible; opacity: 1; transform: none;
+  transition: opacity 200ms var(--eq-ease), transform 200ms var(--eq-ease), visibility 0s; }
 
 @layer utilities {
   /* Rejilla de puntos del hero: patrón SVG sólido (sin degradados ni transparencias). #A4E635 ≈ 10 % Tinta sobre Lima */

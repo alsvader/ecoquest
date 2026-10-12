@@ -94,11 +94,15 @@ export function Navbar() {
             aria-label={label}
             onClick={() => setOpen((o) => !o)}
           >
-            <span aria-hidden="true" className="flex flex-col gap-[5px]"><i className="block h-[4px] w-6 bg-tinta" /><i className="block h-[4px] w-6 bg-tinta" /><i className="block h-[4px] w-6 bg-tinta" /></span>
+            <span aria-hidden="true" className="flex flex-col gap-[5px] [&>i]:block [&>i]:h-[4px] [&>i]:w-6 [&>i]:bg-tinta [&>i]:transition-[transform,opacity] [&>i]:duration-200 [&>i]:ease-[cubic-bezier(0.23,1,0.32,1)]">
+              <i className={open ? "translate-y-[9px] rotate-45" : ""} />
+              <i className={open ? "scale-x-0 opacity-0" : ""} />
+              <i className={open ? "-translate-y-[9px] -rotate-45" : ""} />
+            </span>
           </button>
         </div>
       </nav>
-      <div id="menu-movil" ref={menuRef} className="border-t-4 border-tinta bg-papel lg:hidden" hidden={!open} onClick={(e) => (e.target as HTMLElement).closest("a") && setOpen(false)}>
+      <div id="menu-movil" ref={menuRef} className="menu-movil absolute inset-x-0 top-full border-y-4 border-tinta bg-papel lg:hidden" data-open={open} inert={!open} onClick={(e) => (e.target as HTMLElement).closest("a") && setOpen(false)}>
         <ul role="list" className="wrap flex flex-col gap-3 py-5">
           {LINKS.map((l) => (
             <li key={l.href}><a className="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href={l.href} aria-current={current === l.href ? "location" : undefined}>{l.label}</a></li>
