@@ -3,13 +3,13 @@ import { Camera, DotBg, usePop } from "../fx";
 import { BEAT, C } from "../theme";
 import { Box, FlyIn, PixelIcon, Rise, Sticker, T, type IconName } from "../ui";
 
-const MISSIONS: { icon: IconName; bg: string; title: string }[] = [
+export const MISSIONS: { icon: IconName; bg: string; title: string }[] = [
   { icon: "leaf", bg: C.lima, title: "Find a large leaf" },
   { icon: "flower", bg: C.rosa, title: "Discover a flower and its colors" },
   { icon: "tree", bg: C.cian, title: "Find a tree with visible roots" },
 ];
 
-function MissionCard({ i }: { i: number }) {
+export function MissionCard({ i, width = 520 }: { i: number; width?: number }) {
   const m = MISSIONS[i];
   const frame = useCurrentFrame();
   const p = usePop(BEAT * 3 + i * BEAT, { damping: 13, stiffness: 150 });
@@ -17,7 +17,7 @@ function MissionCard({ i }: { i: number }) {
   return (
     <div style={{ perspective: 1400 }}>
       <div style={{ transform: `rotateY(${(1 - p) * 95}deg) translateY(${bob}px) rotate(${(i - 1) * -1.2}deg)`, transformOrigin: "left center", opacity: p > 0.03 ? 1 : 0 }}>
-        <Box bg={C.blanco} shadow={14} border={6} style={{ width: 520, padding: 28, display: "flex", gap: 24, alignItems: "flex-start" }}>
+        <Box bg={C.blanco} shadow={14} border={6} style={{ width, padding: 28, display: "flex", gap: 24, alignItems: "flex-start" }}>
           <Box bg={m.bg} shadow={0} border={5} style={{ padding: 14, flexShrink: 0 }}>
             <PixelIcon name={m.icon} size={88} />
           </Box>

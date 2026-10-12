@@ -1,6 +1,6 @@
 # video/ — promo en motion design
 
-Video promocional de EcoQuest (1920×1080, 30 fps, ~76 s) para el reto **Touch Grass** de Hacktoberfest 2026. Está hecho con [Remotion](https://www.remotion.dev/) (React → video) y usa capturas **reales** de la landing y de la app, además de la respuesta real del servicio de inferencia (SigLIP2).
+Video promocional de EcoQuest (1920×1080, 30 fps, ~76 s; también en vertical 1080×1920, ver abajo) para el reto **Touch Grass** de Hacktoberfest 2026. Está hecho con [Remotion](https://www.remotion.dev/) (React → video) y usa capturas **reales** de la landing y de la app, además de la respuesta real del servicio de inferencia (SigLIP2).
 
 El texto del video está en inglés (la publicación en DEV es en inglés); las capturas de la app quedan en español, como la app.
 
@@ -33,12 +33,21 @@ npm run capture       # capturas reales; requiere `docker compose up -d` en la r
 npm run music         # sintetiza la banda sonora → public/audio/soundtrack.wav
 npm run studio        # vista previa interactiva
 npm run render        # → out/ecoquest-promo.mp4
+npm run render:vertical  # → out/ecoquest-promo-vertical.mp4 (9:16)
 ```
 
 - Si faltan las fotos de prueba: `cd inference && python scripts/download_samples.py samples_external`.
 - `npm run capture` usa el Chromium de Playwright; para reutilizar uno ya instalado: `CHROME=/ruta/a/chrome npm run capture`.
 - Sin música: `npx remotion render src/index.ts EcoQuestPromo out/sin-musica.mp4 --props='{"music":false}'`.
 - Cuadros sueltos para revisar: `npm run stills -- 120 600 1300` → `out/stills/`.
+
+## Versión vertical (Instagram Reels y TikTok)
+
+Composición `EcoQuestVertical`: 1080×1920, 30 fps, misma duración (~76 s), mismo orden de escenas y misma banda sonora, así que la música y los efectos siguen cayendo en los cortes. Cada escena está recompuesta para 9:16 en `src/vertical/scenes/` (texto en más líneas, tarjetas apiladas, el teléfono al centro, la arquitectura de IA en columna); los tiempos, datos y piezas animadas se importan de `src/scenes/`, de modo que un cambio de texto o de tiempo ahí vale para los dos cortes.
+
+- El contenido importante queda fuera de las zonas que tapa la interfaz de Reels y TikTok (aprox. 220 px arriba, 420 px abajo y la columna de botones a la derecha). Para verlas: en el Studio activa la prop `safeZone`, o `COMP=EcoQuestVertical SAFE=1 npm run stills -- 600 1250` → `out/stills-vertical/`.
+- Sin música: `npx remotion render src/index.ts EcoQuestVertical out/vertical-sin-musica.mp4 --props='{"music":false,"safeZone":false}'`.
+- Portada: `npx remotion still src/index.ts EcoQuestVertical out/cover-vertical.png --frame=150`.
 
 ## Música y efectos
 

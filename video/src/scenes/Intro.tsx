@@ -1,11 +1,11 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { Camera, DotBg, EASE_OUT, Glitch, PixelBurst, usePop } from "../fx";
 import { C } from "../theme";
 import { Box, FlyIn, PixelIcon, Sticker, T } from "../ui";
 
-const START = 30; // "PRESS START" → se abre el nivel
+export const START = 30; // "PRESS START" → se abre el nivel
 
-function Letter({ ch, delay }: { ch: string; delay: number }) {
+export function Letter({ ch, delay }: { ch: string; delay: number }) {
   const p = usePop(delay, { damping: 11, stiffness: 220 });
   return (
     <span style={{ display: "inline-block", transform: `translateY(${(1 - p) * -380}px) rotate(${(1 - p) * -18}deg)`, opacity: p > 0.01 ? 1 : 0 }}>
@@ -15,12 +15,12 @@ function Letter({ ch, delay }: { ch: string; delay: number }) {
 }
 
 /** Retícula negra que se disuelve en píxeles desde el centro (apertura tipo iris). */
-function PixelIris() {
+export function PixelIris() {
   const frame = useCurrentFrame();
-  const cols = 24;
-  const rows = 14;
-  const cw = 1920 / cols;
-  const ch = 1080 / rows;
+  const { width, height } = useVideoConfig();
+  const [cols, rows] = width > height ? [24, 14] : [14, 24];
+  const cw = width / cols;
+  const ch = height / rows;
   const cells = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -35,7 +35,7 @@ function PixelIris() {
   return <AbsoluteFill>{cells}</AbsoluteFill>;
 }
 
-function PressStart() {
+export function PressStart() {
   const frame = useCurrentFrame();
   if (frame > START + 4) return null;
   const blink = Math.floor(frame / 6) % 2 === 0 || frame > START - 6;

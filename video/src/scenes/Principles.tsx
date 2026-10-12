@@ -3,7 +3,7 @@ import { Camera, DotBg, Glitch, usePop } from "../fx";
 import { BEAT, C, F } from "../theme";
 import { Box, PixelIcon, Rise, Sticker, T, type IconName } from "../ui";
 
-const ITEMS: { icon: IconName; bg: string; text: string; rot: number }[] = [
+export const ITEMS: { icon: IconName; bg: string; text: string; rot: number }[] = [
   { icon: "lock", bg: C.rosa, text: "No accounts", rot: -2 },
   { icon: "pin", bg: C.cian, text: "No precise location", rot: 1.5 },
   { icon: "phone", bg: C.lima, text: "Progress stays on your phone", rot: -1 },
@@ -11,16 +11,16 @@ const ITEMS: { icon: IconName; bg: string; text: string; rot: number }[] = [
   { icon: "hand", bg: C.naranja, text: "Manual marks say «Unverified»", rot: -1.5 },
   { icon: "star", bg: C.blanco, text: "Apache‑2.0 model · MIT code", rot: 1 },
 ];
-const FIRST = 24;
+export const FIRST = 24;
 
-function Item({ i }: { i: number }) {
+export function Item({ i, size = 40 }: { i: number; size?: number }) {
   const it = ITEMS[i];
   const p = usePop(FIRST + i * BEAT, { damping: 12, stiffness: 260 });
   return (
     <div style={{ transform: `scale(${2 - p}) rotate(${it.rot}deg)`, opacity: p > 0.05 ? Math.min(1, p * 2) : 0 }}>
       <Box bg={it.bg} shadow={12} border={6} style={{ padding: "16px 26px", display: "flex", alignItems: "center", gap: 22 }}>
         <PixelIcon name={it.icon} size={52} />
-        <span style={T.display(40)}>{it.text}</span>
+        <span style={T.display(size)}>{it.text}</span>
       </Box>
     </div>
   );

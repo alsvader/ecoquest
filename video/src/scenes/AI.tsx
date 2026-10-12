@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import results from "../../public/shots/classify-results.json";
 import { Camera, DotBg, EASE_IN_OUT, EASE_OUT, usePop, Vignette } from "../fx";
@@ -6,10 +6,10 @@ import { BEAT, C, F } from "../theme";
 import { Box, FlyIn, PixelIcon, Rise, Sticker, T, type IconName } from "../ui";
 
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const SWITCH = 150; // fase A (arquitectura) → fase B (respuesta real + umbrales)
+export const SWITCH = 150; // fase A (arquitectura) → fase B (respuesta real + umbrales)
 
 // ── Fase A · arquitectura ────────────────────────────────────────────────────
-const NODES: { icon: IconName; bg: string; title: string; sub: string }[] = [
+export const NODES: { icon: IconName; bg: string; title: string; sub: string }[] = [
   { icon: "phone", bg: C.lima, title: "Phone · PWA", sub: "Downscales the photo on the device" },
   { icon: "arrow", bg: C.amarillo, title: "FastAPI · /classify", sub: "In memory. Never written to disk" },
   { icon: "eye", bg: C.cian, title: "SigLIP2", sub: "Image ↔ text similarity, on CPU" },
@@ -78,7 +78,8 @@ const { mission_id: _omit, ...response } = results.flower;
 const JSON_TEXT = JSON.stringify(response, null, 2);
 const CMD = "$ curl -F image=@flower.jpg -F mission_id=flower \\\n    localhost:8000/classify";
 
-function Terminal() {
+/** `style` cambia la posición; el tamaño del recuadro y del texto se puede reducir para el formato vertical. */
+export function Terminal({ style, width = 900, height = 690, fontSize = 24 }: { style?: CSSProperties; width?: number; height?: number; fontSize?: number }) {
   const frame = useCurrentFrame();
   const t = frame - SWITCH - 8;
   const cmd = CMD.slice(0, Math.max(0, Math.floor(t * 3.2)));
@@ -86,8 +87,8 @@ function Terminal() {
   const p = usePop(SWITCH, { damping: 15, stiffness: 140 });
   const cursor = Math.floor(frame / 8) % 2 === 0;
   return (
-    <div style={{ position: "absolute", left: 110, top: 270, transform: `translateX(${(1 - p) * -1100}px) rotate(-1deg)` }}>
-      <Box bg="#0b0b0b" shadow={16} border={6} style={{ width: 900, height: 690, outline: `4px solid ${C.cian}`, outlineOffset: -16, padding: "34px 40px", fontFamily: F.mono, fontSize: 24, lineHeight: 1.42, color: C.blanco, whiteSpace: "pre-wrap" }}>
+    <div style={{ position: "absolute", left: 110, top: 270, ...style, transform: `translateX(${(1 - p) * -1100}px) rotate(-1deg)` }}>
+      <Box bg="#0b0b0b" shadow={16} border={6} style={{ width, height, outline: `4px solid ${C.cian}`, outlineOffset: -16, padding: "34px 40px", fontFamily: F.mono, fontSize, lineHeight: 1.42, color: C.blanco, whiteSpace: "pre-wrap" }}>
         <div style={{ color: C.lima }}>{cmd}{t > 0 && cmd.length < CMD.length && cursor ? "▌" : ""}</div>
         <div style={{ marginTop: 14 }}>
           {colorize(body)}
@@ -113,10 +114,10 @@ const BARS: { id: keyof typeof results; icon: IconName; label: string; threshold
   { id: "roots", icon: "tree", label: "Visible roots", threshold: 0.6 },
 ];
 
-function ThresholdBars() {
+export function ThresholdBars({ style, photo = 104, gap = 30 }: { style?: CSSProperties; photo?: number; gap?: number }) {
   const frame = useCurrentFrame();
   return (
-    <div style={{ position: "absolute", left: 1090, top: 300, width: 720, display: "flex", flexDirection: "column", gap: 30 }}>
+    <div style={{ position: "absolute", left: 1090, top: 300, width: 720, display: "flex", flexDirection: "column", gap, ...style }}>
       {BARS.map((b, i) => {
         const at = SWITCH + 30 + i * BEAT;
         const e = interpolate(frame, [at, at + 12], [0, 1], { ...clamp, easing: EASE_OUT });
@@ -125,7 +126,7 @@ function ThresholdBars() {
         return (
           <div key={b.id} style={{ opacity: e, transform: `translateX(${(1 - e) * 200}px)` }}>
             <Box bg={C.blanco} shadow={10} border={5} style={{ padding: "18px 22px", display: "flex", gap: 20, alignItems: "center" }}>
-              <Img src={staticFile(`photos/${b.id}.jpg`)} style={{ width: 104, height: 104, objectFit: "cover", border: `4px solid ${C.tinta}` }} />
+              <Img src={staticFile(`photos/${b.id}.jpg`)} style={{ width: photo, height: photo, objectFit: "cover", border: `4px solid ${C.tinta}` }} />
               <div style={{ flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div style={{ display: "flex", gap: 10, alignItems: "center", ...T.display(30) }}>

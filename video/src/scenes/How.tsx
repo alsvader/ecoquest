@@ -1,9 +1,10 @@
+import type { CSSProperties } from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { Camera, DotBg, EASE_OUT, usePop } from "../fx";
 import { BEAT, C } from "../theme";
 import { Box, FlyIn, PixelIcon, Rise, Sticker, T, type IconName } from "../ui";
 
-const STEPS: { n: string; bg: string; icon: IconName; title: string; body: string }[] = [
+export const STEPS: { n: string; bg: string; icon: IconName; title: string; body: string }[] = [
   { n: "01", bg: C.lima, icon: "pin", title: "Pick a mission", body: "Choose the expedition and read the safety notice first." },
   { n: "02", bg: C.cian, icon: "phone", title: "Pocket the phone", body: "Walk and look around. The camera opens only when you find something." },
   { n: "03", bg: C.rosa, icon: "camera", title: "Snap the find", body: "An open-weight AI model checks if your photo fits the mission." },
@@ -31,13 +32,13 @@ function Card({ i }: { i: number }) {
   );
 }
 
-function XpBar() {
+export function XpBar({ style }: { style?: CSSProperties }) {
   const frame = useCurrentFrame();
   const fill = interpolate(frame, [100, 150], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: EASE_OUT });
   const enter = usePop(90);
   const segs = 24;
   return (
-    <div style={{ position: "absolute", left: 220, right: 220, bottom: 90, transform: `scaleX(${enter})`, transformOrigin: "left" }}>
+    <div style={{ position: "absolute", left: 220, right: 220, bottom: 90, ...style, transform: `scaleX(${enter})`, transformOrigin: "left" }}>
       <Box bg={C.blanco} shadow={8} border={5} style={{ height: 56, display: "flex", alignItems: "center", gap: 6, padding: "0 8px" }}>
         {Array.from({ length: segs }, (_, k) => (
           <div key={k} style={{ flex: 1, height: 34, background: k / segs < fill ? C.amarillo : "transparent", border: k / segs < fill ? `3px solid ${C.tinta}` : "3px solid transparent" }} />

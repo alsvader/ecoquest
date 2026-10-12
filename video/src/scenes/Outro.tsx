@@ -1,17 +1,17 @@
-import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
+import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
 import { Camera, DotBg, EASE_OUT, Glitch, PixelBurst, usePop } from "../fx";
 import { BEAT, C, F } from "../theme";
 import { Box, FlyIn, PixelIcon, Rise, Sticker, T } from "../ui";
 
-const CLOSE = 200; // el nivel se cierra en píxeles → «GO OUTSIDE»
+export const CLOSE = 200; // el nivel se cierra en píxeles → «GO OUTSIDE»
 
 /** Retícula negra que se cierra hacia el centro (espejo del iris de la intro). */
-function PixelClose() {
+export function PixelClose() {
   const frame = useCurrentFrame();
-  const cols = 24;
-  const rows = 14;
-  const cw = 1920 / cols;
-  const ch = 1080 / rows;
+  const { width, height } = useVideoConfig();
+  const [cols, rows] = width > height ? [24, 14] : [14, 24];
+  const cw = width / cols;
+  const ch = height / rows;
   const cells = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {

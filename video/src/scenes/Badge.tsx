@@ -4,34 +4,34 @@ import { BEAT, C } from "../theme";
 import { Box, FlyIn, Phone, PixelIcon, Rise, Screen, Sticker, T } from "../ui";
 
 /** Rayos giratorios de "recompensa" (estilo videojuego). */
-function Sunburst() {
+export function Sunburst({ cx = 560, cy = 640 }: { cx?: number; cy?: number }) {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill style={{ background: C.amarillo, overflow: "hidden" }}>
       <div
         style={{
           position: "absolute",
-          left: 560 - 1600,
-          top: 640 - 1600,
+          left: cx - 1600,
+          top: cy - 1600,
           width: 3200,
           height: 3200,
           background: `repeating-conic-gradient(from ${frame * 0.6}deg, rgba(255,255,255,0.45) 0deg 9deg, transparent 9deg 18deg)`,
         }}
       />
-      <AbsoluteFill style={{ background: "radial-gradient(circle at 560px 640px, transparent 30%, rgba(255,230,0,0.9) 75%)" }} />
+      <AbsoluteFill style={{ background: `radial-gradient(circle at ${cx}px ${cy}px, transparent 30%, rgba(255,230,0,0.9) 75%)` }} />
     </AbsoluteFill>
   );
 }
 
 /** Insignia de doble rombo (web/src/components/eq/insignia.tsx), redibujada a escala de video. */
-function Insignia() {
+export function Insignia({ cx = 560, cy = 640 }: { cx?: number; cy?: number }) {
   const frame = useCurrentFrame();
   const p = usePop(18, { damping: 11, stiffness: 120 });
   const ribbon = usePop(36, { damping: 9, stiffness: 240 });
   const float = Math.sin(frame / 15) * 8;
   const S = 330;
   return (
-    <div style={{ position: "absolute", left: 560 - S / 2, top: 640 - S / 2 + float, width: S, height: S, transform: `scale(${p}) rotate(${(1 - p) * -540}deg)` }}>
+    <div style={{ position: "absolute", left: cx - S / 2, top: cy - S / 2 + float, width: S, height: S, transform: `scale(${p}) rotate(${(1 - p) * -540}deg)` }}>
       <div style={{ position: "absolute", inset: 0, transform: "rotate(45deg)", background: C.amarillo, border: `8px solid ${C.tinta}`, boxShadow: `16px 16px 0 ${C.tinta}` }} />
       <div style={{ position: "absolute", inset: 56, transform: "rotate(45deg)", background: C.lima, border: `8px solid ${C.tinta}` }} />
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 10 }}>

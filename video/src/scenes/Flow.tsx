@@ -6,13 +6,13 @@ import { C } from "../theme";
 import { Box, FlyIn, Phone, PixelIcon, Rise, Screen, Sticker, T } from "../ui";
 
 // Fases (cuadros locales a la escena, alineadas a tiempos de 15 cuadros)
-const P = { welcome: 0, session: 60, mission: 120, camera: 165, shutter: 180, scan: 188, result: 255, trio: 300 } as const;
+export const P = { welcome: 0, session: 60, mission: 120, camera: 165, shutter: 180, scan: 188, result: 255, trio: 300 } as const;
 const PW = 380; // ancho de pantalla del teléfono
 
-const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+export const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /** Pantalla que entra empujando desde la derecha. */
-function Push({ at, children }: { at: number; children: ReactNode }) {
+export function Push({ at, children }: { at: number; children: ReactNode }) {
   const frame = useCurrentFrame();
   if (frame < at) return null;
   const x = interpolate(frame, [at, at + 12], [100, 0], { ...clamp, easing: EASE_OUT });
@@ -20,7 +20,7 @@ function Push({ at, children }: { at: number; children: ReactNode }) {
 }
 
 /** Visor de cámara + análisis: foto real, obturador y barrido de "IA". */
-function Viewfinder() {
+export function Viewfinder() {
   const frame = useCurrentFrame();
   const scan = interpolate(frame, [P.scan, P.scan + 34, P.scan + 35, P.scan + 62], [0, 1, 0, 1], clamp);
   const pix = frame >= P.scan && frame < P.result ? 1 : 0;
@@ -66,7 +66,7 @@ const PROMPTS: { cat: keyof typeof SCORES; text: string; win?: boolean }[] = [
   { cat: "distractor", text: "a photo of a person · the sky · a palm trunk…" },
 ];
 
-function PromptPanel() {
+export function PromptPanel() {
   const frame = useCurrentFrame();
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 18, marginTop: 34 }}>
@@ -93,7 +93,7 @@ function PromptPanel() {
   );
 }
 
-const CAPTIONS: { at: number; until: number; step: string; title: string; body: string; bg: string }[] = [
+export const CAPTIONS: { at: number; until: number; step: string; title: string; body: string; bg: string }[] = [
   { at: P.welcome + 8, until: P.session, step: "Step 1", title: "Safety first.", body: "Don’t touch wildlife or pull plants. Stay on the trails. Then: ¡Comenzar!", bg: C.naranja },
   { at: P.session, until: P.mission, step: "Step 2", title: "Phone away.", body: "Three missions, one list. Take the phone out only when you find something.", bg: C.cian },
   { at: P.mission, until: P.camera, step: "Step 3", title: "Found a flower?", body: "Each mission gives one clear instruction. Look first, then shoot.", bg: C.rosa },

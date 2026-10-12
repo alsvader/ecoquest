@@ -1,25 +1,27 @@
+import type { CSSProperties } from "react";
 import { AbsoluteFill, interpolate, useCurrentFrame } from "remotion";
 import { Camera, DotBg, EASE_IN_OUT, EASE_OUT, Glitch, PixelBurst, usePop, Vignette } from "../fx";
 import { C } from "../theme";
 import { Box, PixelIcon, Rise, T } from "../ui";
 
-const SLAM_1 = 30; // «SCREEN TIME.»
-const STRIKE = 120; // tachado
-const SWAP = 135; // cambia el mensaje
-const SLAM_2 = 165; // «LESS.»
+export const SLAM_1 = 30; // «SCREEN TIME.»
+export const STRIKE = 120; // tachado
+export const SWAP = 135; // cambia el mensaje
+export const SLAM_2 = 165; // «LESS.»
 
-function Slam({ at, bg, children }: { at: number; bg: string; children: string }) {
+export function Slam({ at, bg, size = 140, children }: { at: number; bg: string; size?: number; children: string }) {
   const p = usePop(at, { damping: 13, stiffness: 260 });
   return (
     <div style={{ display: "inline-block", transform: `scale(${2.2 - 1.2 * p}) rotate(${-2 * p}deg)`, opacity: p > 0.02 ? 1 : 0, transformOrigin: "left center" }}>
-      <Box bg={bg} shadow={16} border={6} style={{ padding: "6px 28px 12px", ...T.display(140) }}>
+      <Box bg={bg} shadow={16} border={6} style={{ padding: "6px 28px 12px", ...T.display(size) }}>
         {children}
       </Box>
     </div>
   );
 }
 
-function Counter() {
+/** `style` cambia la posición (por defecto, a la derecha del texto). */
+export function Counter({ style }: { style?: CSSProperties }) {
   const frame = useCurrentFrame();
   const outside = frame >= SWAP + 10;
   // Minutos de pantalla: suben sin parar; luego caen y el contador pasa a «tiempo afuera».
@@ -31,7 +33,7 @@ function Counter() {
   const flip = usePop(SWAP + 10, { damping: 12 });
   const bars = [0.42, 0.55, 0.5, 0.71, 0.66, 0.82, Math.min(1, up / 372)];
   return (
-    <div style={{ position: "absolute", right: 110, top: 250, transform: `translateX(${(1 - enter) * 700}px) rotate(${3 - 1 * flip}deg)` }}>
+    <div style={{ position: "absolute", right: 110, top: 250, ...style, transform: `translateX(${(1 - enter) * 700}px) rotate(${3 - 1 * flip}deg)` }}>
       <Box bg={outside ? C.lima : C.tinta} shadow={18} border={6} style={{ width: 470, padding: 32, outline: outside ? undefined : `6px solid ${C.naranja}`, outlineOffset: -18 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16, ...T.pixel(24, outside ? C.tinta : C.naranja) }}>
           <PixelIcon name={outside ? "tree" : "phone"} size={52} />

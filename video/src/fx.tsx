@@ -96,11 +96,16 @@ export function Camera({
 
 // ── Transición de píxeles (cubre la mitad final de una escena y la inicial de la siguiente) ──
 export const WIPE = 20;
-export function PixelWipe({ color, cols = 16, rows = 9, dir = 1 }: { color: string; cols?: number; rows?: number; dir?: 1 | -1 }) {
+export function PixelWipe({ color, cols, rows, dir = 1 }: { color: string; cols?: number; rows?: number; dir?: 1 | -1 }) {
   const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  // Celdas casi cuadradas en cualquier orientación: 16 × 9 en horizontal, 9 × 16 en vertical.
+  const portrait = height > width;
+  cols ??= portrait ? 9 : 16;
+  rows ??= portrait ? 16 : 9;
   const T = WIPE;
-  const cw = 1920 / cols;
-  const ch = 1080 / rows;
+  const cw = width / cols;
+  const ch = height / rows;
   const cells: ReactNode[] = [];
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {

@@ -5,8 +5,8 @@ import { Browser, FlyIn, Rise, Sticker, T } from "../ui";
 
 const W = 1180;
 const H = 738;
-const SCROLL_FROM = 105;
-const SCROLL_TO = 228;
+export const SCROLL_FROM = 105;
+export const SCROLL_TO = 228;
 // landing-full.png mide 1440 × 13555 a 1x.
 const FULL_SCALE = W / 1440;
 const SCROLL_MAX = 4400;
