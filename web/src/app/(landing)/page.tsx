@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Navbar } from "@/components/landing/navbar";
+import { LandingMotion } from "@/components/landing/motion";
 import { Hero } from "@/components/landing/sections/hero";
 import { Problema } from "@/components/landing/sections/problema";
 import { ComoSeJuega } from "@/components/landing/sections/como-se-juega";
@@ -34,7 +35,7 @@ export const metadata: Metadata = {
     description:
       "Una expedición de ~20 minutos con tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos.",
   },
-  // Imagen OG/Twitter: src/app/opengraph-image.png y twitter-image.png (convención de archivos de Next).
+  // Imagen OG/Twitter: src/app/(landing)/opengraph-image.png y twitter-image.png (convención de archivos de Next; deben vivir en este segmento porque openGraph/twitter de arriba reemplazan las imágenes heredadas del layout raíz).
 };
 
 export default function LandingPage() {
@@ -42,6 +43,7 @@ export default function LandingPage() {
     <>
       <a href="#contenido" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:border-4 focus:border-tinta focus:bg-voltio focus:px-4 focus:py-3 focus:font-bold focus:shadow-brutal">Saltar al contenido</a>
       <Navbar />
+      <LandingMotion />
       <main id="contenido" tabIndex={-1} className="outline-none">
       <Hero />
       <Problema />
