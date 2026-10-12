@@ -1,0 +1,50 @@
+{
+  "leaf": {
+    "mission_id": "leaf",
+    "status": "confirmed",
+    "scores": {
+      "flower": 0.0042,
+      "leaf": 0.9889,
+      "roots": 0,
+      "distractor": 0.0069
+    },
+    "target_score": 0.9889,
+    "model": {
+      "name": "google/siglip2-base-patch16-256",
+      "license": "apache-2.0"
+    },
+    "latency_ms": 531
+  },
+  "flower": {
+    "mission_id": "flower",
+    "status": "confirmed",
+    "scores": {
+      "flower": 0.7036,
+      "leaf": 0.2931,
+      "roots": 0,
+      "distractor": 0.0033
+    },
+    "target_score": 0.7036,
+    "model": {
+      "name": "google/siglip2-base-patch16-256",
+      "license": "apache-2.0"
+    },
+    "latency_ms": 574
+  },
+  "roots": {
+    "mission_id": "roots",
+    "status": "confirmed",
+    "scores": {
+      "flower": 0,
+      "leaf": 0.0004,
+      "roots": 0.8442,
+      "distractor": 0.1553
+    },
+    "target_score": 0.8442,
+    "model": {
+      "name": "google/siglip2-base-patch16-256",
+      "license": "apache-2.0"
+    },
+    "latency_ms": 473
+  }
+}

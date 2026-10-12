@@ -1,0 +1,6 @@
+node_modules/
+out/
+# Fotos de Wikimedia Commons: no se redistribuyen en el repo (ver inference/samples_external/README.md).
+public/photos/
+# Generado por npm run music
+public/audio/

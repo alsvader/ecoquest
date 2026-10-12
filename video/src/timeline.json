@@ -1,0 +1,16 @@
+{
+  "fps": 30,
+  "bpm": 120,
+  "scenes": [
+    { "id": "intro", "frames": 180 },
+    { "id": "problem", "frames": 240 },
+    { "id": "how", "frames": 180 },
+    { "id": "landing", "frames": 240 },
+    { "id": "missions", "frames": 180 },
+    { "id": "flow", "frames": 360 },
+    { "id": "ai", "frames": 300 },
+    { "id": "badge", "frames": 180 },
+    { "id": "principles", "frames": 180 },
+    { "id": "outro", "frames": 240 }
+  ]
+}
