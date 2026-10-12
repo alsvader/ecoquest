@@ -1,7 +1,8 @@
 ---
 title: EcoQuest: put your phone away and let an open model check your discoveries
-published: false
+published: true
 tags: hacktoberfest, ai, opensource, showdev
+cover_image: https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/cover-1000x420.png
 ---
 
 <!-- markdownlint-disable MD013 MD034 -->
