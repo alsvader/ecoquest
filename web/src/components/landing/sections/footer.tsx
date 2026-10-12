@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { README_URL, REPO_URL } from "../links";
+import { INSTAGRAM_URL, LINKEDIN_URL, README_URL, REPO_URL, TIKTOK_URL, YOUTUBE_URL } from "../links";
 import { Icon } from "../icon";
 
 /** Sección 13 · Footer. */
@@ -18,7 +18,8 @@ export function Footer() {
           <div>
             <h3 className="pix text-[14px] text-lima">Proyecto</h3>
             <ul role="list" className="mt-4 space-y-1 text-[16px] leading-snug">
-              <li>Hecho por <b>Aarón López Sosa</b> en Villahermosa, Tabasco.</li>
+              <li>Hecho por <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-2 underline-offset-4 hover:text-lima">Aarón López Sosa</a> en Villahermosa, Tabasco.</li>
+              <li>Sígueme: <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center py-2 underline decoration-2 underline-offset-4 hover:text-lima">Instagram</a> · <a href={TIKTOK_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center py-2 underline decoration-2 underline-offset-4 hover:text-lima">TikTok</a> · <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center py-2 underline decoration-2 underline-offset-4 hover:text-lima">YouTube</a></li>
               <li>Proyecto para el reto semanal <b>Touch Grass</b> de <b>Hacktoberfest 2026</b>.</li>
               <li>Estado: <b>prototipo en construcción</b>.</li>
             </ul>

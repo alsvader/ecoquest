@@ -59,7 +59,7 @@ export function Hero() {
                 </div>
               </div>
             </div>
-            <figcaption className="phone-cap mx-auto mt-8 w-fit max-w-full whitespace-normal text-center leading-normal xl:absolute xl:left-1/2 xl:top-[640px] xl:mt-0 xl:-translate-x-1/2 xl:whitespace-nowrap">Pantalla de ejemplo. Prototipo en construcción.</figcaption>
+            <figcaption className="phone-cap mx-auto mt-8 w-fit max-w-full whitespace-normal text-center leading-normal">Pantalla de ejemplo. Prototipo en construcción.</figcaption>
           </figure>
 
           {/* Tarjeta de misión flotante (estilo Pantalla 2 · Misiones) */}
