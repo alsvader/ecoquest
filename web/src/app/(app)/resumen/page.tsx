@@ -61,7 +61,7 @@ export default function SummaryPage() {
         block
         onClick={() => {
           track("tap_finish_summary");
-          router.push("/");
+          router.push("/jugar");
         }}
       >
         {t("summary.finish")}

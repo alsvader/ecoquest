@@ -97,7 +97,7 @@ export default function DataPage() {
         )}
       </EqCard>
       <div className="flex-1" />
-      <LinkButton href="/" block>
+      <LinkButton href="/jugar" block>
         {t("data.back")}
       </LinkButton>
     </Screen>

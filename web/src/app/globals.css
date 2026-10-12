@@ -88,6 +88,11 @@
   --shadow-brutal-lg: 8px 8px 0 0 #000;
 
   --translate-press: 5px;
+
+  /* Añadidos de la landing (tailwind.config.js v3) */
+  --shadow-brutal-hover: 7px 7px 0 0 #000;
+  --container-wrap: 1312px;
+  --breakpoint-xs: 420px;
 }
 
 /* Utilidades del tema v3 sin equivalente directo en los namespaces de @theme de v4. */

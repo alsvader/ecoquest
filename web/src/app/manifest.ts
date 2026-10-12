@@ -6,7 +6,7 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "EcoQuest",
     description: "The Real World Is Your Playground.",
     lang: "es-MX",
-    start_url: "/",
+    start_url: "/jugar",
     display: "standalone",
     orientation: "portrait",
     background_color: "#FFFBEF",

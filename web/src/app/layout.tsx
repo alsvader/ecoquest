@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { ExpeditionProvider } from "@/components/expedition-provider";
 import { t } from "@/i18n";
 import { fontBody, fontDisplay, fontPixel } from "./fonts";
 import "./globals.css";
@@ -22,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="es-MX" className={`${fontPixel.variable} ${fontDisplay.variable} ${fontBody.variable} h-full antialiased`}>
       <body className="min-h-dvh bg-background font-sans text-base text-foreground">
-        <ExpeditionProvider>{children}</ExpeditionProvider>
+        {children}
       </body>
     </html>
   );

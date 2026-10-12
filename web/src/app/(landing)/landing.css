@@ -1,0 +1,150 @@
+/* Landing de EcoQuest, portada de docs/landing/src/input.css (Tailwind v3) a v4.
+   Todo va bajo `.landing` para no colisionar con los componentes de la app (.card, .badge, .chip…). */
+@reference "../globals.css";
+
+/* Fix de la guía: Silkscreen Bold con subsets latin + latin-ext (Ó, É, Á, Ñ…) bajo un nombre propio. */
+@font-face{font-family:"EQ Pixel";font-weight:700;font-style:normal;font-display:swap;size-adjust:128%;
+  src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JUjfVPf62XiF7kO-i9aAhAfmyi2A.woff2) format("woff2");unicode-range:U+0000-00FF,U+2000-206F}
+@font-face{font-family:"EQ Pixel";font-weight:700;font-style:normal;font-display:swap;size-adjust:128%;
+  src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JUjfVPf62XiF7kO-i9aAhAfmKi2Oud.woff2) format("woff2");unicode-range:U+0100-02BA,U+1E00-1E9F}
+
+
+/* Scroll suave y ancla bajo el navbar sticky, solo cuando la página es la landing. */
+html:has(.landing) { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+@media (prefers-reduced-motion: reduce) { html:has(.landing) { scroll-behavior: auto; } }
+
+@layer base {
+  .landing { @apply bg-papel font-sans text-base text-tinta antialiased; --font-pixel: "EQ Pixel", "Silkscreen", monospace; }
+  .landing :is(h1, h2, h3, h4) { @apply font-display font-normal; }
+  .landing :focus-visible { outline: 4px solid var(--color-turbo); outline-offset: 3px; }
+  .landing [id] { scroll-margin-top: 104px; }
+  .landing summary::-webkit-details-marker { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .landing *, .landing *::before, .landing *::after { transition: none !important; animation: none !important; }
+  }
+}
+
+@layer components {
+  .landing {
+
+  .wrap { @apply mx-auto w-full max-w-wrap px-5 md:px-8 lg:px-12; }
+  .pix { @apply font-pixel font-bold uppercase tracking-[0.5px]; }
+  /* Separador para Silkscreen: Silkscreen dibuja «·» como guion → cuadrito sólido */
+  .sep { display:inline-block; width:.42em; height:.42em; background:currentColor; vertical-align:.18em; margin:0 .25em; }
+
+  /* ——— Botón (guía .btn / DS §7.1) ——— */
+  .btn {
+    @apply inline-flex min-h-tap items-center justify-center gap-2.5 whitespace-nowrap border-4 border-tinta bg-lima px-6 py-3
+           text-center font-display text-[20px] leading-tight text-tinta no-underline shadow-brutal
+           transition-[transform,box-shadow] duration-snap
+           hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-hover
+           active:translate-x-press active:translate-y-press active:shadow-none;
+  }
+  .btn-sec { @apply bg-white; }
+  .btn-ia { @apply bg-glitch; }
+  .btn-sm { @apply min-h-12 px-4 py-2 text-sm leading-[1.45] shadow-brutal-sm; }
+  .btn-lg { @apply min-h-16 px-[30px] py-3.5 text-[22px]; }
+  .btn-ghost { @apply border-dashed bg-transparent shadow-none hover:translate-x-0 hover:translate-y-0 hover:shadow-none active:translate-x-0 active:translate-y-0; }
+
+  /* ——— Sticker (DS §7.8) ——— */
+  .sticker { @apply inline-block whitespace-nowrap border-3 border-tinta px-[13px] py-[7px] font-pixel text-pixel-sm font-bold uppercase tracking-[0.5px] text-tinta shadow-brutal-sm -rotate-2; }
+  .sticker-r { @apply rotate-2; }
+
+  /* ——— Eyebrow pixel ——— */
+  .eyebrow { @apply inline-block bg-tinta px-3.5 py-[9px] font-pixel text-[12px] font-bold uppercase leading-normal tracking-[0.5px] text-lima sm:text-[14px]; }
+  .eyebrow::before { content:""; @apply mr-2.5 inline-block h-2.5 w-2.5 bg-voltio align-[0.05em]; }
+  .eyebrow .sep { margin: 0 calc(.25em + 10px); }
+  .eyebrow-dark { @apply border-3 border-tinta bg-lima text-tinta; }
+  .eyebrow-dark::before { @apply bg-tinta; }
+
+  .h2 { @apply text-[40px] leading-[1.02] tracking-[-0.5px] sm:text-[48px] lg:text-[56px]; }
+  .lead { @apply max-w-[720px] text-[19px] font-medium leading-normal sm:text-[20px]; }
+
+  /* ——— Tarjetas ——— */
+  .card { @apply border-4 border-tinta bg-white p-6 text-tinta shadow-brutal; }
+  .card-lg { @apply shadow-brutal-lg; }
+
+  /* ——— PixelIcon ——— */
+  .px { image-rendering: pixelated; @apply inline-block flex-none align-middle; }
+  .px-shadow { filter: drop-shadow(3px 3px 0 #000); }
+
+  /* ——— XP bars (DS §7.4) ——— */
+  .xp { @apply flex h-10 gap-1 border-4 border-tinta bg-white p-1 shadow-brutal-sm; }
+  .xp > :where(i) { @apply flex-1 border-2 border-dashed border-tinta bg-white; }
+  .xp > i.on { @apply border-solid bg-lima; }
+  .xp > i.manual { @apply border-solid bg-turbo; }
+  .xp-cont { @apply relative h-[30px] border-4 border-tinta bg-white shadow-brutal-sm; }
+  .xp-cont .fill { @apply absolute inset-y-0 left-0 border-r-4 border-tinta bg-voltio;
+    /* Patrón duro (cortes secos), NO degradado visual — única excepción permitida por el DS */
+    background-image: repeating-linear-gradient(90deg, transparent 0 18px, #000 18px 21px); }
+  .xp-cont .lbl { @apply absolute right-[9px] top-1/2 -translate-y-1/2 font-pixel text-[12px] font-bold leading-none; }
+
+  /* ——— Status badge (DS §7.3) ——— */
+  .status { @apply inline-flex items-center gap-2 border-3 border-tinta bg-white py-1.5 pl-1.5 pr-3 text-sm font-bold leading-[1.1] text-tinta shadow-brutal-sm; }
+  .status .s-ico { @apply flex h-7 w-7 flex-none items-center justify-center border-2 border-tinta bg-white text-[17px] leading-none; }
+  .chip { @apply inline-block whitespace-nowrap border-2 border-tinta bg-white px-1.5 py-0.5 text-[12px] font-bold uppercase leading-tight text-tinta; }
+
+  /* ——— Safety notice (DS §7.7) ——— */
+  .safety { @apply border-3 border-tinta bg-lava px-2.5 py-[9px] text-[13.5px] font-medium leading-[1.3] text-tinta; }
+  .safety b { @apply mb-[5px] block font-pixel text-[10px] font-bold tracking-[0.5px]; }
+  .warn-ico { font-family: var(--font-sans); font-size: 14px; line-height: 1; vertical-align: -1px; }
+
+  /* ——— Insignia (DS §7.5) ——— */
+  .badge { --s:200px; --in:34px; width:var(--s); height:var(--s); margin:calc(var(--s) * .23); @apply relative flex-none; }
+  .badge-sm { --s:140px; --in:24px; }
+  .badge-xs { --s:104px; --in:18px; }
+  /* `xs:badge-sm` (variante sobre clase custom) no existe en v4: se replica a mano a partir de 420px. */
+  @media (min-width:420px) { .badge.xs\:badge-sm { --s:140px; --in:24px; } }
+  .badge .ring { @apply absolute inset-0 rotate-45 border-4 border-tinta bg-voltio;
+    /* El original recibía por accidente el halo de la utilidad `ring` de Tailwind v3; se conserva para igualar píxel a píxel. */
+    box-shadow: 0 0 0 3px rgb(59 130 246 / .5), 8px 8px 0 0 #000 !important; }
+  .badge .inner { inset: var(--in); @apply absolute rotate-45 border-4 border-tinta bg-lima; }
+  .badge .content { @apply absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-center; }
+  .badge .ribbon { @apply absolute bottom-[-20px] left-1/2 whitespace-nowrap border-3 border-tinta bg-turbo px-2.5 py-[7px] font-pixel text-[10px] font-bold uppercase leading-none tracking-[0.5px] shadow-brutal-sm;
+    transform: translateX(-50%) rotate(-3deg); }
+  .badge.locked .ring { @apply bg-[#E8E4D6]; }
+  .badge.locked .inner { @apply border-dashed bg-white; }
+
+  /* ——— Phone mockups (guía .phone) ——— */
+  .phone { width:296px; height:612px; @apply relative flex-none border-4 border-tinta bg-tinta p-2.5; box-shadow: 10px 10px 0 0 #000, 10px 10px 0 4px var(--color-papel); }
+  .phone-lima { box-shadow: 10px 10px 0 0 #000, 10px 10px 0 4px var(--color-lima); }
+  .phone .notch { @apply absolute left-1/2 top-2.5 z-10 h-[17px] w-[84px] -translate-x-1/2 bg-tinta; }
+  .screen { @apply relative flex h-full w-full flex-col overflow-hidden bg-papel text-tinta; }
+  .sbar { @apply flex h-[26px] flex-none items-center justify-between border-b-3 border-tinta bg-white px-3 text-[11px] font-bold leading-none; }
+  .scr-body { @apply flex min-h-0 flex-1 flex-col gap-[11px] p-[13px]; }
+  .scr-body :where(.btn) { @apply min-h-[56px] w-full px-3.5 py-2.5 text-[18px] shadow-[4px_4px_0_#000]; }
+  .scr-title { @apply font-display text-[25px] leading-[1.05]; }
+  .mini { @apply grid grid-cols-[40px_1fr] items-center gap-2 border-3 border-tinta bg-white p-2 shadow-brutal-sm; }
+  .mini .ico { @apply flex h-10 w-10 items-center justify-center border-2 border-tinta; }
+  .mini b { @apply block text-[14px] leading-[1.15]; }
+  .mini .st { @apply mt-[3px] inline-block border-2 border-tinta px-[5px] py-px text-[11px] font-bold uppercase leading-tight; }
+  .hud { @apply flex items-center justify-between gap-2; }
+  .hud .pix { @apply whitespace-nowrap text-[10px]; }
+  .phone-cap { @apply whitespace-nowrap border-3 border-tinta bg-white px-3 py-1.5 text-xs font-bold italic shadow-brutal-sm; }
+
+  /* ——— Navbar links ——— */
+  .nav-link { @apply border-3 border-transparent px-3.5 py-[9px] text-[17px] font-bold no-underline hover:border-tinta hover:bg-white hover:shadow-brutal-sm; }
+
+  /* ——— Lists ——— */
+  .li-x, .li-ok { @apply relative py-2 pl-10; }
+  .li-x::before, .li-ok::before { @apply absolute left-0 top-2 flex h-7 w-7 items-center justify-center border-2 border-tinta text-[15px] font-bold leading-none text-tinta; }
+  .li-x::before { content:"✕"; @apply bg-lava; }
+  .li-ok::before { content:"✓"; @apply bg-lima; }
+
+  /* ——— FAQ (details) ——— */
+  .faq { @apply border-4 border-tinta bg-white shadow-brutal transition-[transform,box-shadow] duration-snap; }
+  .faq[open] { @apply translate-x-press translate-y-press shadow-none; }
+  .faq summary { @apply flex min-h-tap cursor-pointer list-none items-center justify-between gap-4 px-5 py-3 font-display text-[19px] leading-tight sm:text-[21px]; }
+  .faq .plus { @apply flex h-12 w-12 flex-none items-center justify-center border-3 border-tinta bg-voltio; }
+  .faq[open] .plus { @apply bg-lima; }
+  .faq[open] .plus img { transform: rotate(45deg); }
+  .faq .ans { @apply border-t-3 border-tinta px-5 pb-5 pt-4 text-[18px] leading-normal; }
+
+  }
+}
+
+@layer utilities {
+  /* Rejilla de puntos del hero: patrón SVG sólido (sin degradados ni transparencias). #A4E635 ≈ 10 % Tinta sobre Lima */
+  .bg-dots { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Crect x='13' y='13' width='2.4' height='2.4' fill='%23A4E635'/%3E%3C/svg%3E"); }
+  .bg-dots-selva { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Crect x='13' y='13' width='2.4' height='2.4' fill='%231C6B3A'/%3E%3C/svg%3E"); }
+}
