@@ -94,6 +94,7 @@ La configuración son variables de entorno, por ejemplo `INFERENCE_CPUS=4 docker
 | Variable | Por defecto | Qué hace |
 |---|---|---|
 | `PUBLIC_API_URL` | `http://localhost:8000` | URL de la API **tal como la ve el navegador**. Se incorpora a la imagen web al construirla: reconstruye (`--build`) si la cambias |
+| `PUBLIC_SITE_URL` | `http://localhost:3000` | URL pública de la web (metaetiquetas OG/Twitter y canonical). Se incorpora al construir; defínela en producción |
 | `ALLOWED_ORIGINS` | `http://localhost:3000` | Orígenes que permite el CORS de la API; debe coincidir con la URL de la web |
 | `RATE_LIMIT_PER_MINUTE` | `30` | Peticiones por minuto por cliente a `/classify` |
 | `TRUST_PROXY` | `false` | Ponlo en `true` detrás de un proxy inverso; si no, todos los usuarios comparten una IP para el límite de tasa |

@@ -27,6 +27,7 @@ Mediciones hechas con Docker Desktop en un Mac con procesador Apple Silicon (**a
 
 - Imagen de **305 MB**, construida en dos etapas con `output: "standalone"`. Corre como usuario no root.
 - **~48 MB de memoria** con un límite de 256 MB y 0.5 CPU. Arranca en ~2 s. Todas las rutas responden 200.
+- `NEXT_PUBLIC_SITE_URL` (URL pública de la web) también se incorpora **al construir** y define `og:url`, el canonical y las URLs absolutas de la imagen OG; sin ella apuntan a `http://localhost:3000`.
 - `NEXT_PUBLIC_API_URL` se incorpora **al construir**: hay que reconstruir la imagen si cambia la URL pública de la API. También se usa para la política de seguridad (CSP `connect-src`).
 
 ## Qué cambió en el Dockerfile de inferencia

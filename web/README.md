@@ -17,6 +17,7 @@ npm run lint && npm run typecheck && npm test && npm run build
 |---|---|
 | `NEXT_PUBLIC_MOCK_API=true` | Usa un clasificador simulado (sin backend). |
 | `NEXT_PUBLIC_API_URL` | URL base de la API real (por defecto `http://localhost:8000`). Se usa si el mock no está activo. |
+| `NEXT_PUBLIC_SITE_URL` | URL pública de la web (por defecto `http://localhost:3000`). Define `og:url`, el canonical y las URLs absolutas de las imágenes OG/Twitter; se incorpora al construir. |
 
 **Mock:** si el nombre del archivo contiene `confirmed`, `inconclusive` o `unconfirmed`, devuelve ese estado; con `error` simula una caída de red; en otro caso depende del tamaño del archivo. Sus umbrales (0.5 / 0.3) son solo del mock.
 

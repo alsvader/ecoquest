@@ -96,6 +96,7 @@ Settings are environment variables, for example `INFERENCE_CPUS=4 docker compose
 | Variable | Default | What it does |
 |---|---|---|
 | `PUBLIC_API_URL` | `http://localhost:8000` | URL of the API **as the browser sees it**. It is baked into the web image at build time: rebuild (`--build`) after changing it |
+| `PUBLIC_SITE_URL` | `http://localhost:3000` | Public URL of the website (OG/Twitter meta tags and canonical). Baked in at build time; set it in production |
 | `ALLOWED_ORIGINS` | `http://localhost:3000` | Origins allowed by the API's CORS; must match the URL of the web app |
 | `RATE_LIMIT_PER_MINUTE` | `30` | Requests per minute per client to `/classify` |
 | `TRUST_PROXY` | `false` | Set to `true` behind a reverse proxy, otherwise every user shares one IP for rate limiting |
