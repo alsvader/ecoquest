@@ -1,143 +1,149 @@
 # EcoQuest
 
+[English](README.md) · [Español (México)](README.es-MX.md)
+
 > *The Real World Is Your Playground.*
 
-EcoQuest convierte una caminata corta al aire libre en una expedición. Eliges una misión, guardas el teléfono, exploras y fotografías solo algunos hallazgos. Un modelo de IA de **pesos abiertos (SigLIP2)** estima si cada foto es compatible con la misión, y al final recibes un registro simple de tus descubrimientos.
+EcoQuest turns a short walk outdoors into an expedition. You pick a mission, put your phone away, explore, and photograph only a few findings. An **open-weight AI model (SigLIP2)** estimates whether each photo matches the mission, and at the end you get a simple record of your discoveries.
 
-Proyecto para el reto semanal **Touch Grass** de **Hacktoberfest 2026**. Expedición piloto: **«Descubre el Edén»**, en el Parque Tomás Garrido Canabal, Villahermosa, Tabasco, México (~20 min, 3 misiones).
+A project for the weekly **Touch Grass** challenge in **Hacktoberfest 2026**. Pilot expedition: **«Descubre el Edén»** (*Discover Eden*), in Parque Tomás Garrido Canabal, Villahermosa, Tabasco, Mexico (~20 min, 3 missions).
 
-## Estado del proyecto
+## Project status
 
-MVP en desarrollo. Lo que existe hoy y lo que falta:
+MVP in development. What exists today and what is still missing:
 
-| Parte | Estado |
+| Part | Status |
 |---|---|
-| Servicio de inferencia (`inference/`) | Implementado; 20 tests; probado con el modelo real y con imágenes sintéticas |
-| App web móvil / PWA (`web/`) | Implementada con el diseño v2; 36 tests; flujo probado de punta a punta contra el servicio real en un navegador headless a 390 px |
-| Calibración de umbrales (Fase 0) | **Preliminar.** Ajustados con 42 fotos de Wikimedia Commons (no del parque ni de un teléfono) y con prompts negativos elegidos viendo esas mismas fotos; sin validar con fotos reales del parque |
-| Prueba en exterior en Villahermosa (Fase 3) | **Pendiente.** Aún no se ha probado en un teléfono real ni al aire libre |
-| Dockerfile / despliegue | Sin probar |
+| Inference service (`inference/`) | Implemented; 20 tests; tested with the real model and with synthetic images |
+| Mobile web app / PWA (`web/`) | Implemented with the v2 design; 36 tests; full flow tested end to end against the real service in a headless browser at 390 px |
+| Threshold calibration (Phase 0) | **Preliminary.** Tuned with 42 Wikimedia Commons photos (not from the park, not taken with a phone), and with negative prompts chosen while looking at those same photos; not validated with real park photos |
+| Outdoor test in Villahermosa (Phase 3) | **Pending.** Not yet tested on a real phone or outdoors |
+| Dockerfiles / deployment | Images built and run locally (arm64) with `docker compose`; server resources measured, see [docs/despliegue.md](docs/despliegue.md). **Not deployed or tested on a hosting provider or on x86_64** |
 
-Esto no es un producto terminado: los resultados del modelo son estimaciones y su calidad con fotos reales no está medida.
+This is not a finished product: the model's results are estimates, and its quality on real photos has not been measured.
 
-## Cómo funciona
+## How it works
 
 ```text
-Web móvil / PWA (Next.js)  ──foto reducida──▶  API de clasificación (FastAPI)
-                                                       │
-                                                       ▼
-                                          SigLIP2 (google/siglip2-base-patch16-256)
-                                                       │
-Progreso y resumen (IndexedDB, en tu teléfono) ◀── estado de la misión
+Mobile web / PWA (Next.js)  ──reduced photo──▶  Classification API (FastAPI)
+                                                         │
+                                                         ▼
+                                            SigLIP2 (google/siglip2-base-patch16-256)
+                                                         │
+Progress and summary (IndexedDB, on your phone) ◀── mission status
 ```
 
-1. Eliges la expedición y lees el aviso de seguridad.
-2. Guardas el teléfono y exploras. La cámara se abre solo cuando encuentras algo.
-3. La foto se reduce en el dispositivo y se envía al servicio, que la compara con descripciones de cada categoría visual.
-4. El resultado es un estado: **Coincidencia** (tentativa), **No confirmado**, **Reintentar** (error de red o del servicio) o **Revisión manual · No verificada**.
-5. Al final ves tus hallazgos, el tiempo en sesión y una insignia.
+1. You choose the expedition and read the safety notice.
+2. You put your phone away and explore. The camera opens only when you find something.
+3. The photo is downscaled on the device and sent to the service, which compares it with descriptions of each visual category.
+4. The result is a status: **Match** (tentative), **Unconfirmed**, **Retry** (network or service error), or **Manual review · Unverified**.
+5. At the end you see your findings, the time in session, and a badge.
 
-### Misiones del piloto
+> The app's interface is currently in Spanish (`es-MX`) only; this README is the English version of the project documentation.
 
-| Misión | Categoría visual | Nota |
+### Pilot missions
+
+| Mission | Visual category | Note |
 |---|---|---|
-| Encuentra una hoja de gran tamaño | `leaf` | No se infiere el tamaño físico a partir de una sola foto |
-| Descubre una flor y registra sus colores | `flower` | Los colores solo se describen si son visibles |
-| Encuentra un árbol con raíces visibles | `roots` | Evaluación tentativa; admite marcado manual |
+| Find a large leaf | `leaf` | Physical size is not inferred from a single photo |
+| Discover a flower and record its colors | `flower` | Colors are described only when visible |
+| Find a tree with visible roots | `roots` | Tentative assessment; manual marking is allowed |
 
-## IA abierta: qué hace y qué no
+## Open AI: what it does and what it doesn't
 
-- **Modelo:** [`google/siglip2-base-patch16-256`](https://huggingface.co/google/siglip2-base-patch16-256), licencia **Apache-2.0** (verificada el 2026-10-08 en Hugging Face; revísala antes de publicar). Es el componente central: sin él no hay validación de hallazgos.
-- **Qué calcula:** una similitud imagen-texto, normalizada con softmax entre las categorías `flower`, `leaf`, `roots` y `distractor`.
-- **Qué NO es:** no es una probabilidad calibrada, no identifica especies y no verifica nada. Por eso la interfaz no muestra números ni porcentajes, solo una barra con la línea de umbral de la misión.
-- **Dónde corre:** en un servidor propio (la inferencia no es local ni offline). Open-weight no implica offline.
-- **Marcado manual:** si la IA falla, puedes marcar una misión a mano. Queda etiquetada «No verificada» en el progreso, el resumen y la insignia.
+- **Model:** [`google/siglip2-base-patch16-256`](https://huggingface.co/google/siglip2-base-patch16-256), **Apache-2.0** license (checked on 2026-10-08 on Hugging Face; re-check before publishing). It is the core component: without it there is no finding validation.
+- **What it computes:** an image-text similarity, normalized with softmax across the categories `flower`, `leaf`, `roots`, and `distractor`.
+- **What it is NOT:** it is not a calibrated probability, it does not identify species, and it verifies nothing. That is why the interface shows no numbers or percentages, only a bar with the mission's threshold line.
+- **Where it runs:** on a server you control (inference is not local or offline). Open-weight does not mean offline.
+- **Manual marking:** if the AI fails, you can mark a mission by hand. It is labeled «Unverified» in progress, the summary, and the badge.
 
-## Estructura del repositorio
+## Repository structure
 
 ```
 ecoquest/
-├── inference/   API FastAPI + SigLIP2 (README propio con endpoints, variables y benchmark)
-├── web/         App Next.js + TypeScript + Tailwind v4 (README propio con estructura y diseño)
-├── docs/design/ Brief y sistema de diseño (v2 es el que usa la app)
-├── EcoQuest_Propuesta.md   Propuesta original y evaluación de alternativas
-├── EcoQuest_PRD.md         Requisitos del producto
-└── PLAN.md                 Plan de trabajo y contrato de la API
+├── inference/   FastAPI + SigLIP2 API (own README: endpoints, variables, benchmark)
+├── web/         Next.js + TypeScript + Tailwind v4 app (own README: structure and design)
+├── docs/design/ Brief and design system (v2 is the one the app uses)
+├── EcoQuest_Propuesta.md   Original proposal and evaluation of alternatives (Spanish)
+├── EcoQuest_PRD.md         Product requirements (Spanish)
+└── PLAN.md                 Work plan and API contract (Spanish)
 ```
 
-## Puesta en marcha local
+## Running locally
 
-Requisitos: Node.js 20+ y Python 3.12. El primer arranque del servicio descarga ~1.5 GB de pesos a la caché de Hugging Face.
+Requirements: Node.js 20+ and Python 3.12. The first start of the service downloads ~1.5 GB of weights into the Hugging Face cache.
 
-**1. Servicio de inferencia**
+**1. Inference service**
 
 ```bash
 cd inference
 python3.12 -m venv .venv && source .venv/bin/activate
 pip install -r requirements-dev.txt
-pytest                                   # modelo mockeado; no descarga nada
+pytest                                   # model mocked; downloads nothing
 ALLOWED_ORIGINS=http://localhost:3000 uvicorn app.main:app --port 8000
 ```
 
-**2. App web**
+**2. Web app**
 
 ```bash
 cd web
 npm install
 cp .env.example .env.local
-# NEXT_PUBLIC_MOCK_API=true  → sin backend (clasificador simulado)
-# NEXT_PUBLIC_MOCK_API=false → usa el servicio en NEXT_PUBLIC_API_URL (por defecto http://localhost:8000)
+# NEXT_PUBLIC_MOCK_API=true  → no backend (simulated classifier)
+# NEXT_PUBLIC_MOCK_API=false → uses the service at NEXT_PUBLIC_API_URL (default http://localhost:8000)
 npm run dev                              # http://localhost:3000
 ```
 
-`NEXT_PUBLIC_*` se incorpora en tiempo de build: si cambias el modo, vuelve a compilar (`npm run build`). Para probar la cámara en un teléfono real, la página necesita servirse por HTTPS o desde la misma red con un origen permitido en `ALLOWED_ORIGINS`.
+`NEXT_PUBLIC_*` variables are baked in at build time: if you change the mode, rebuild (`npm run build`). To test the camera on a real phone, the page must be served over HTTPS or from the same network with an origin allowed in `ALLOWED_ORIGINS`.
 
-Verificación de cada parte: `web`: `npm run lint && npm run typecheck && npm test && npm run build`; `inference`: `pytest`.
+Checks for each part: `web`: `npm run lint && npm run typecheck && npm test && npm run build`; `inference`: `pytest`.
 
-## Contrato de la API
+With Docker: `docker compose up --build` starts both services (web on `http://localhost:3000`, API on `http://localhost:8000`); the first build downloads ~1.5 GB of model weights. `NEXT_PUBLIC_API_URL` is baked into the web image, so set `PUBLIC_API_URL` to the public URL of the API before building for a server.
 
-`POST /classify` (multipart: `image` JPEG/PNG/WebP ≤ 5 MB, `mission_id` ∈ `leaf|flower|roots`) devuelve `status` (`confirmed | inconclusive | unconfirmed`), `scores`, `target_score`, el modelo usado y `latency_ms`. Detalle completo en [`PLAN.md`](PLAN.md) y [`inference/README.md`](inference/README.md).
+## API contract
 
-## Calibración de umbrales (Fase 0)
+`POST /classify` (multipart: `image` as JPEG/PNG/WebP ≤ 5 MB, `mission_id` ∈ `leaf|flower|roots`) returns `status` (`confirmed | inconclusive | unconfirmed`), `scores`, `target_score`, the model used, and `latency_ms`. Full details in [`PLAN.md`](PLAN.md) (Spanish) and [`inference/README.md`](inference/README.md).
 
-Los umbrales por misión viven en `inference/app/thresholds.json` y son **provisionales**. Para calibrarlos:
+## Threshold calibration (Phase 0)
 
-1. Reúne 15–30 fotos con derechos de uso claros (idealmente tuyas) en `inference/samples/<categoría>/`, con las categorías `flower`, `leaf`, `roots` y `distractor` (incluye casos negativos y ambiguos).
-2. Ejecuta `python scripts/benchmark.py samples --csv resultados.csv` desde `inference/`.
-3. Ajusta los umbrales y copia el mismo valor a `web/src/data/expedition.ts` (hoy es un valor espejo mantenido a mano, usado solo para dibujar la línea de umbral).
+Per-mission thresholds live in `inference/app/thresholds.json` and are **provisional**. To calibrate them:
 
-## Privacidad y seguridad
+1. Gather 15–30 photos with clear usage rights (ideally your own) in `inference/samples/<category>/`, using the categories `flower`, `leaf`, `roots`, and `distractor` (include negative and ambiguous cases).
+2. From `inference/`, run `python scripts/benchmark.py samples --csv results.csv`.
+3. Adjust the thresholds and copy the same values to `web/src/data/expedition.ts` (currently a mirror value kept by hand, used only to draw the threshold line).
 
-- Sin cuentas y sin ubicación. Progreso, fotos y registro de la sesión viven en IndexedDB de tu dispositivo.
-- La foto reducida se envía al servicio solo para inferir; se procesa en memoria y no se escribe a disco ni se registra en logs.
-- Desde la app puedes **borrar tus fotos** o **borrar todos los datos** (`/datos`) y exportar el registro de la sesión.
-- Aviso de seguridad antes de empezar: no tocar fauna ni arrancar plantas, quedarse en senderos y lejos del borde del agua. Antes de una salida, consulta horarios y reglas del parque (incluidas las de fotografía).
-- «Tiempo en sesión» es el tiempo de la sesión en la app; no se mide el tiempo real fuera de la pantalla ni la distancia caminada.
+## Privacy and security
 
-## Fuera del MVP
+- No accounts and no location. Progress, photos, and the session log live in IndexedDB on your device.
+- The reduced photo is sent to the service only for inference; it is processed in memory and is not written to disk or logged.
+- From the app you can **delete your photos** or **delete all data** (`/datos`), and export the session log.
+- Safety notice before starting: do not touch wildlife or pick plants, stay on trails and away from the water's edge. Before going out, check the park's hours and rules (including photography rules).
+- "Time in session" is the time spent in the app; the app does not measure time away from the screen or distance walked.
 
-Cuentas, rankings, generación ilimitada de misiones con IA, reconocimiento de especies, rutas y mapas, audio de aves, inferencia offline garantizada y publicación en tiendas de apps.
+## Out of scope for the MVP
 
-## Limitaciones conocidas
+Accounts, rankings, unlimited AI-generated missions, species recognition, routes and maps, bird audio, guaranteed offline inference, and publishing to app stores.
 
-- Umbrales sin calibrar y sin evaluación con fotos reales; pueden aparecer falsos positivos y falsos negativos.
-- Límite de tasa del servicio en memoria y por proceso (no se comparte entre réplicas).
-- PWA básica: manifest e icono, sin service worker ni modo offline.
-- Dockerfile sin construir ni probar; sin medición de latencia en hardware de producción (en CPU local fue de ~80–105 ms por imagen, sin contar red).
-- Sin pruebas con lectores de pantalla, en dispositivo real ni a 360 px de ancho.
+## Known limitations
 
-## Licencias y créditos
+- Uncalibrated thresholds and no evaluation on real photos; false positives and false negatives are expected.
+- The service's rate limit is in memory and per process (not shared across replicas).
+- Basic PWA: manifest and icon, no service worker and no offline mode.
+- Server needs measured only on arm64 in Docker Desktop: the inference service needs at least ~1 GB of RAM (it is killed at 640 MB; 2 GB recommended) and takes ~0.5 s per photo with 2 vCPUs or ~1.6 s with 1 vCPU, excluding network. Nothing measured on x86_64 or a hosting provider (details in [docs/despliegue.md](docs/despliegue.md)).
+- Not tested with screen readers, on real devices, or at 360 px wide.
 
-- **Modelo:** SigLIP2 (`google/siglip2-base-patch16-256`), Apache-2.0.
-- **Fuentes:** Silkscreen, Archivo Black y Space Grotesk, bajo SIL Open Font License 1.1.
-- **Dependencias:** FastAPI, Starlette, Uvicorn, Transformers, PyTorch, Pillow, Next.js, React, Tailwind CSS, entre otras; verifica versiones y licencias exactas al publicar.
-- **Licencia del código de este repositorio:** [MIT](LICENSE). Los modelos, las fuentes y las fotos de terceros conservan sus propias licencias, indicadas arriba.
-- **Fotos de calibración:** deben tener derechos de uso claros y atribución cuando la licencia la exija.
+## Licenses and credits
 
-## Prueba en exterior y demo
+- **Model:** SigLIP2 (`google/siglip2-base-patch16-256`), Apache-2.0.
+- **Fonts:** Silkscreen, Archivo Black, and Space Grotesk, under the SIL Open Font License 1.1.
+- **Dependencies:** FastAPI, Starlette, Uvicorn, Transformers, PyTorch, Pillow, Next.js, React, Tailwind CSS, among others; verify exact versions and licenses before publishing.
+- **Code license for this repository:** [MIT](LICENSE). Models, fonts, and third-party photos keep their own licenses, listed above.
+- **Calibration photos:** must have clear usage rights and attribution where the license requires it.
 
-Pendiente. Cuando se realice, aquí se documentarán la fecha, el lugar, el teléfono usado, cuántos pasos de interfaz hizo falta dar, los aciertos y errores del modelo y la valoración cualitativa (¿motivó a observar más el entorno o distrajo?), junto con el video o las fotos de la salida.
+## Outdoor test and demo
 
-## Referencias
+Pending. When it happens, this section will document the date, place, phone used, how many interface steps were needed, the model's hits and misses, and a qualitative assessment (did it encourage people to notice their surroundings, or distract them?), along with the video or photos from the outing.
+
+## References
 
 [Hacktoberfest](https://hacktoberfest.com/) · [SigLIP2](https://huggingface.co/google/siglip2-base-patch16-256) · [Transformers](https://huggingface.co/docs/transformers/) · [Next.js](https://nextjs.org/)
