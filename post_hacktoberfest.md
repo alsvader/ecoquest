@@ -30,17 +30,11 @@ It is for people who already walk, garden, or spend time in parks and want a lig
 
 Here is the real app, running locally against the real inference service. Nothing is mocked.
 
-**1. Start the expedition.** The welcome screen shows the safety notice before anything else. The phone is meant to stay in the pocket.
+![The three steps of a mission: welcome, mission, result](https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/app-flujo.png)
 
-![Welcome screen with the safety notice](https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/app-01-bienvenida.png)
-
-**2. Pick a mission and capture a finding.** Each mission gives one clear instruction, like "look at it carefully before you take the camera out".
-
-![Flower mission screen](https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/app-03-mision.png)
-
-**3. Get the result.** I sent a real flower photo through the pipeline. SigLIP2 scored it against the flower prompts and the distractors, and the app marked the mission as complete. The result is labeled as a visual estimate, not a verification, and the bar shows the mission's threshold instead of a percentage.
-
-![Mission completed with the similarity bar](https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/app-05-resultado.png)
+1. **Start the expedition.** The welcome screen shows the safety notice before anything else. The phone is meant to stay in the pocket.
+2. **Pick a mission.** Each mission gives one clear instruction, like "look at it carefully before you take the camera out".
+3. **Get the result.** I sent a real flower photo through the pipeline. SigLIP2 scored it against the flower prompts and the distractors, and the app marked the mission as complete. The result is labeled as a visual estimate, not a verification, and the bar shows the mission's threshold instead of a percentage.
 
 > Photo credit: _Bougainvillea flower closeup_ by Kailash Easterling, [CC BY 4.0, Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Bougainvillea_flower_closeup.jpg). Used as a test image for the screenshot.
 
