@@ -28,6 +28,14 @@ It is for people who already walk, garden, or spend time in parks and want a lig
 
 ## Demo
 
+<!-- TODO before publishing: upload video/out/ecoquest-promo.mp4 (YouTube, unlisted or public) and replace VIDEO_ID below. -->
+
+{% youtube VIDEO_ID %}
+
+A 76-second walkthrough of EcoQuest. Every app screen in it is a real screenshot of the app running locally, and the classifier output is the real `/classify` response from SigLIP2 for three test photos. It is a motion-design video, not footage from the park.
+
+> Test photos in the video, from Wikimedia Commons: _Zen of a Raindrop – Colocasia Leaf Beauty_ by Mandu joshi (CC0), _Barbados Heliconia psittacorum Parrot Heliconia 1209_ by ImagePerson ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)), and _Rubber fig (Ficus elastica) aerial roots_ by David E Mead (CC0). The music and sound effects are original, synthesized for the video.
+
 Here is the real app, running locally against the real inference service. Nothing is mocked.
 
 ![The three steps of a mission: welcome, mission, result](https://raw.githubusercontent.com/alsvader/ecoquest/main/docs/hacktoberfest/app-flujo.png)
@@ -48,7 +56,7 @@ docker compose up --build -d
 
 Then open `http://localhost:3000`. The first build takes about 8 minutes because it downloads ~1.5 GB of model weights.
 
-<!-- TODO before publishing: add a deployed link or a video of the outdoor test. The challenge requires one of them. -->
+<!-- TODO (optional): once the outdoor test happens, add a deployed link or a video of it. The video demo above covers the "deployed link or video demo" requirement once VIDEO_ID is filled in. -->
 
 ## Code
 
