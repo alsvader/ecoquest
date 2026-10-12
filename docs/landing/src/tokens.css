@@ -1,0 +1,95 @@
+/* ==========================================================
+   EcoQuest — Design tokens v0.1 (Neo-brutalismo · videojuego)
+   "The Real World Is Your Playground."
+   Regla de oro: los colores brillantes SIEMPRE llevan texto negro.
+   ========================================================== */
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;700&display=swap");
+
+:root {
+  /* --- Paleta base ---------------------------------------- */
+  --eq-lima:      #B6FF3B; /* Lima Edén — naturaleza, éxito, CTA principal */
+  --eq-amarillo:  #FFE600; /* Amarillo Voltio — XP, atención, "No confirmado" */
+  --eq-rosa:      #FF3EA5; /* Rosa Turbo — logros, revisión manual */
+  --eq-cian:      #00E5FF; /* Cian Glitch — IA, información, enlaces */
+  --eq-naranja:   #FF7A00; /* Naranja Lava — reintentar, seguridad, alertas */
+  --eq-selva:     #0A5C2B; /* Selva Profunda — fondo oscuro con texto claro */
+  --eq-tinta:     #000000; /* Tinta — bordes, sombras, texto */
+  --eq-papel:     #FFFBEF; /* Papel — fondo base */
+  --eq-blanco:    #FFFFFF;
+
+  /* --- Roles semánticos ----------------------------------- */
+  --eq-bg:            var(--eq-papel);
+  --eq-fg:            var(--eq-tinta);
+  --eq-primary:       var(--eq-lima);
+  --eq-on-primary:    var(--eq-tinta);
+  --eq-accent:        var(--eq-rosa);
+  --eq-info:          var(--eq-cian);
+  --eq-warning:       var(--eq-amarillo);
+  --eq-danger:        var(--eq-naranja);
+
+  /* Estados de resultado de IA (color + icono + texto, nunca solo color) */
+  --eq-status-match:   var(--eq-lima);     /* Coincidencia (tentativa) */
+  --eq-status-unsure:  var(--eq-amarillo); /* No confirmado */
+  --eq-status-retry:   var(--eq-naranja);  /* Reintentar */
+  --eq-status-manual:  var(--eq-rosa);     /* Revisión manual · No verificada */
+
+  /* --- Tipografía ----------------------------------------- */
+  --eq-font-pixel:   "Silkscreen", monospace;  /* peso 700; solo etiquetas cortas / HUD. Press Start 2P descartada: sin mayúsculas acentuadas */
+  --eq-font-display: "Archivo Black", "Arial Black", sans-serif; /* titulares */
+  --eq-font-body:    "Space Grotesk", system-ui, sans-serif;     /* lectura */
+
+  --eq-text-xs:   14px;  /* solo metadatos; nunca texto esencial en exterior */
+  --eq-text-sm:   16px;
+  --eq-text-base: 18px;  /* cuerpo mínimo en móvil */
+  --eq-text-lg:   22px;
+  --eq-text-xl:   28px;
+  --eq-text-2xl:  36px;
+  --eq-text-3xl:  48px;
+  --eq-text-4xl:  64px;
+  --eq-pixel-sm:  13px;  /* Silkscreen Bold, MAYÚSCULAS */
+  --eq-pixel-md:  16px;
+  --eq-pixel-lg:  26px;
+
+  /* --- Bordes, sombras, forma ----------------------------- */
+  --eq-border:      3px;
+  --eq-border-lg:   4px;
+  --eq-radius:      0px;   /* sin redondeo suave */
+  --eq-shadow-sm:   3px 3px 0 0 var(--eq-tinta);
+  --eq-shadow:      5px 5px 0 0 var(--eq-tinta);
+  --eq-shadow-lg:   8px 8px 0 0 var(--eq-tinta);
+  --eq-press:       translate(5px, 5px); /* botón "se hunde" en su sombra */
+  --eq-tilt:        -2deg;               /* stickers */
+
+  /* --- Espaciado y tacto ---------------------------------- */
+  --eq-space-1: 4px;  --eq-space-2: 8px;  --eq-space-3: 12px;
+  --eq-space-4: 16px; --eq-space-5: 24px; --eq-space-6: 32px; --eq-space-8: 48px;
+  --eq-tap-min: 56px;  /* objetivo táctil recomendado en exterior (WCAG pide ≥ 44px) */
+  --eq-dur: 80ms;      /* animaciones secas, sin easing elástico */
+
+  /* --- Puente para shadcn/ui (formato "H S% L%") ---------- */
+  --background: 45 100% 97%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 82 100% 62%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 186 100% 50%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 45 100% 92%;
+  --muted-foreground: 0 0% 15%;
+  --accent: 328 100% 62%;
+  --accent-foreground: 0 0% 0%;
+  --destructive: 29 100% 50%;
+  --destructive-foreground: 0 0% 0%;
+  --border: 0 0% 0%;
+  --input: 0 0% 0%;
+  --ring: 0 0% 0%;
+  --radius: 0rem;
+}
+
+/* Utilidades base opcionales */
+.eq-brutal { border: var(--eq-border) solid var(--eq-tinta); box-shadow: var(--eq-shadow); border-radius: 0; }
+.eq-press:active { transform: var(--eq-press); box-shadow: none; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

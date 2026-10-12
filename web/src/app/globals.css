@@ -1,0 +1,133 @@
+@import "./tokens.css"; /* SIEMPRE primero: paleta y variables shadcn (§6.3). */
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Tema EcoQuest portado de tailwind-theme.js (Tailwind v3, §6.5) a Tailwind v4 (@theme).
+ * Mismos valores y mismos nombres de clase; no se migra a OKLCH.
+ */
+@theme {
+  /* Paleta EcoQuest */
+  --color-lima: #B6FF3B;
+  --color-voltio: #FFE600;
+  --color-turbo: #FF3EA5;
+  --color-glitch: #00E5FF;
+  --color-lava: #FF7A00;
+  --color-selva: #0A5C2B;
+  --color-tinta: #000000;
+  --color-papel: #FFFBEF;
+  /* Estados de resultado IA */
+  --color-status-match: #B6FF3B;
+  --color-status-unsure: #FFE600;
+  --color-status-retry: #FF7A00;
+  --color-status-manual: #FF3EA5;
+  /* Puente shadcn/ui (variables HSL de tokens.css) */
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  /* font-sans (font-pixel y font-display: ver @utility más abajo; las variables de next/font
+     se llaman --font-pixel/--font-display y colisionarían con el namespace --font-* del tema). */
+  --font-sans: var(--font-body), "Space Grotesk", system-ui, sans-serif;
+
+  --text-xs: 14px;
+  --text-xs--line-height: 1.4;
+  --text-sm: 16px;
+  --text-sm--line-height: 1.45;
+  --text-base: 18px;
+  --text-base--line-height: 1.5;
+  --text-lg: 22px;
+  --text-lg--line-height: 1.4;
+  --text-xl: 28px;
+  --text-xl--line-height: 1.2;
+  --text-2xl: 36px;
+  --text-2xl--line-height: 1.1;
+  --text-3xl: 48px;
+  --text-3xl--line-height: 1.05;
+  --text-4xl: 64px;
+  --text-4xl--line-height: 1;
+  --text-pixel-sm: 13px;
+  --text-pixel-sm--line-height: 1.5;
+  --text-pixel-md: 16px;
+  --text-pixel-md--line-height: 1.5;
+  --text-pixel-lg: 26px;
+  --text-pixel-lg--line-height: 1.3;
+
+  /* borderWidth 3/4: border-3 y border-4 ya existen de forma nativa en v4 (3px, 4px). */
+
+  /* borderRadius: todo a 0 */
+  --radius-xs: 0;
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+
+  --shadow-brutal-sm: 3px 3px 0 0 #000;
+  --shadow-brutal: 5px 5px 0 0 #000;
+  --shadow-brutal-lg: 8px 8px 0 0 #000;
+
+  --translate-press: 5px;
+}
+
+/* Utilidades del tema v3 sin equivalente directo en los namespaces de @theme de v4. */
+@utility font-pixel {
+  font-family: var(--font-pixel), "Silkscreen", monospace;
+}
+@utility font-display {
+  font-family: var(--font-display), "Archivo Black", "Arial Black", sans-serif;
+}
+@utility rounded-none {
+  border-radius: 0;
+}
+/* En v4 `rounded` y `rounded-full` son utilidades estáticas (0.25rem / infinito) que se fusionan con éstas
+   y ganarían por orden; !important garantiza el 0 del tema (§6.2.4). Excepción: rounded-[9999px]. */
+@utility rounded {
+  border-radius: 0 !important;
+}
+@utility rounded-full {
+  border-radius: 0 !important;
+}
+@utility rotate-sticker {
+  rotate: -2deg;
+}
+@utility rotate-sticker-r {
+  rotate: 2deg;
+}
+@utility min-h-tap {
+  min-height: 56px;
+}
+@utility min-w-tap {
+  min-width: 56px;
+}
+@utility duration-snap {
+  --tw-duration: 80ms;
+  transition-duration: 80ms;
+}
+
+@layer base {
+  * { @apply border-border; }
+  html { -webkit-tap-highlight-color: transparent; }
+  body { @apply bg-background text-foreground font-sans text-base; }
+  :focus-visible { outline: 4px solid #FF3EA5; outline-offset: 3px; } /* foco Rosa Turbo (guía) */
+}

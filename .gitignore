@@ -1,0 +1,14 @@
+# macOS
+.DS_Store
+
+# editores
+.idea/
+.vscode/
+
+# entorno local
+.env
+.env.*
+!.env.example
+
+# salidas locales
+graphify-out/

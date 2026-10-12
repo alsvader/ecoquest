@@ -1,0 +1,33 @@
+{
+  "_note": "Prompts por categoria. Cada categoria agrega sus prompts con max(logit); luego softmax entre categorias. Texto en ingles: SigLIP2 base es sobre todo ingles. Ajustar tras Fase 0.",
+  "categories": {
+    "flower": [
+      "a photo of a flower",
+      "a close-up photo of a blooming flower with petals",
+      "a photo of colorful flowers on a plant"
+    ],
+    "leaf": [
+      "a photo of a large green leaf",
+      "a close-up photo of a leaf on a plant",
+      "a photo of a big tropical leaf"
+    ],
+    "roots": [
+      "a photo of a tree trunk with exposed roots",
+      "a photo of the base of a tree with visible roots",
+      "a photo of tree roots above the ground"
+    ],
+    "distractor": [
+      "a photo of a person",
+      "a photo of a building or a street",
+      "a photo of the sky",
+      "a photo of the ground, grass or pavement",
+      "a photo of an indoor room",
+      "a blurry photo",
+      "a photo of a smooth tree trunk with no visible roots",
+      "a photo of a palm tree trunk",
+      "a photo of thin small leaves on a branch",
+      "a photo of bamboo or grass blades",
+      "a photo of a fruit or a seed pod on a branch"
+    ]
+  }
+}

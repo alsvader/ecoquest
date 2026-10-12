@@ -1,0 +1,6 @@
+{
+  "_note": "PROVISIONAL. Ajustado con 42 fotos de Wikimedia Commons (inference/samples_external), no con fotos del parque ni de un telefono. Recalibrar con scripts/benchmark.py (Fase 0). target_score >= confirm -> confirmed; >= inconclusive -> inconclusive; si no unconfirmed.",
+  "leaf":   { "confirm": 0.70, "inconclusive": 0.40 },
+  "flower": { "confirm": 0.50, "inconclusive": 0.25 },
+  "roots":  { "confirm": 0.60, "inconclusive": 0.30 }
+}

@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+samples/
+benchmark_out/
+.env
+samples_external/
+samples_validation/
+
+samples_park/

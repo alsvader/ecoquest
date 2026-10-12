@@ -1,0 +1,17 @@
+{
+  "name": "ecoquest-landing",
+  "version": "0.1.0",
+  "private": true,
+  "description": "EcoQuest — landing page (HTML + Tailwind CSS v3). The Real World Is Your Playground.",
+  "scripts": {
+    "icons": "node scripts/gen-icons.js",
+    "build": "npm run icons && tailwindcss -i ./src/input.css -o ./dist/output.css --minify",
+    "watch": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "serve": "npx --yes http-server -p 8080 -c-1 .",
+    "screenshots": "python3 scripts/screenshots.py"
+  },
+  "devDependencies": {
+    "tailwindcss": "3.4.19",
+    "tailwindcss-animate": "^1.0.7"
+  }
+}

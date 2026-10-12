@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoQuest · Guarda el teléfono. El parque es el nivel.</title>
+<meta name="description" content="EcoQuest convierte una caminata en una expedición de ~20 minutos: tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos; tú pones los pasos.">
+<meta name="theme-color" content="#FFFBEF">
+<link rel="icon" href="assets/icons/leaf.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="font" type="font/woff2" crossorigin href="https://fonts.gstatic.com/s/silkscreen/v6/m8JUjfVPf62XiF7kO-i9aAhAfmyi2A.woff2">
+<link rel="stylesheet" href="dist/output.css">
+</head>
+<body>
+<a href="#contenido" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:border-4 focus:border-tinta focus:bg-voltio focus:px-4 focus:py-3 focus:font-bold focus:shadow-brutal">Saltar al contenido</a>
+
+<!-- ======================= 0 · NAVBAR ======================= -->
+<header class="sticky top-0 z-50 border-b-4 border-tinta bg-papel">
+  <nav class="wrap flex h-[76px] items-center justify-between gap-3 lg:h-[92px] lg:gap-6" aria-label="Principal">
+    <a href="#inicio" class="flex items-center gap-3.5 no-underline" aria-label="EcoQuest, ir al inicio">
+      <img src="assets/icons/leaf.svg" width="40" height="40" alt="" class="px px-shadow hidden sm:inline-block">
+      <span class="font-pixel text-[18px] font-bold leading-[1.08] tracking-[-0.5px] [text-shadow:3px_3px_0_#B6FF3B] lg:text-[21px]" aria-hidden="true">ECO<br>QUEST</span>
+    </a>
+    <ul class="hidden items-center gap-1.5 lg:flex">
+      <li><a class="nav-link" href="#como-se-juega">Cómo se juega</a></li>
+      <li><a class="nav-link" href="#expedicion">La expedición</a></li>
+      <li><a class="nav-link" href="#ia-abierta">IA abierta</a></li>
+      <li><a class="nav-link" href="#contribuye">Contribuye</a></li>
+      <li><a class="nav-link" href="#faq">FAQ</a></li>
+    </ul>
+    <div class="flex items-center gap-2.5 sm:gap-4">
+      <!-- TODO: URL de la demo [Por definir] (D1) -->
+      <a class="btn btn-sm px-3 text-[15px] xs:px-4 xs:text-sm lg:px-[18px] lg:leading-normal" href="#">¡Jugar la demo!</a>
+      <button id="menu-btn" type="button" class="flex h-12 w-12 items-center justify-center border-3 border-tinta bg-white shadow-brutal-sm transition-[transform,box-shadow] duration-snap active:translate-x-[3px] active:translate-y-[3px] active:shadow-none lg:hidden [&.is-open]:bg-voltio"
+              aria-controls="menu-movil" aria-expanded="false" aria-label="Abrir menú">
+        <span class="sr-only" data-label>Abrir menú</span>
+        <span aria-hidden="true" class="flex flex-col gap-[5px]"><i class="block h-[4px] w-6 bg-tinta"></i><i class="block h-[4px] w-6 bg-tinta"></i><i class="block h-[4px] w-6 bg-tinta"></i></span>
+      </button>
+    </div>
+  </nav>
+  <div id="menu-movil" class="border-t-4 border-tinta bg-papel lg:hidden" hidden>
+    <ul class="wrap flex flex-col gap-3 py-5">
+      <li><a class="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href="#como-se-juega">Cómo se juega</a></li>
+      <li><a class="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href="#expedicion">La expedición</a></li>
+      <li><a class="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href="#ia-abierta">IA abierta</a></li>
+      <li><a class="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href="#contribuye">Contribuye</a></li>
+      <li><a class="flex min-h-tap items-center border-3 border-tinta bg-white px-4 text-[19px] font-bold shadow-brutal-sm" href="#faq">FAQ</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="contenido">
+
+<!-- ======================= 1 · HERO ======================= -->
+<section id="inicio" class="relative overflow-hidden border-b-4 border-tinta bg-lima bg-dots lg:h-[804px]" aria-labelledby="hero-title">
+  <img src="assets/icons/flower.svg" width="40" height="40" alt="" class="px px-shadow absolute left-[38px] top-[40px] hidden lg:block">
+  <img src="assets/icons/star.svg" width="32" height="32" alt="" class="px px-shadow absolute left-[706px] top-[700px] hidden lg:block">
+  <img src="assets/icons/heart.svg" width="32" height="32" alt="" class="px px-shadow absolute left-[1396px] top-[720px] hidden xl:block">
+
+  <div class="wrap relative grid items-center gap-6 pb-16 pt-12 lg:h-full lg:grid-cols-[1.12fr_1fr] lg:py-0">
+    <!-- Izquierda -->
+    <div>
+      <p class="eyebrow">RETO TOUCH GRASS<span class="sep" aria-hidden="true"></span><span class="sr-only"> · </span>HACKTOBERFEST 2026</p>
+      <h1 id="hero-title" class="mb-[22px] mt-[26px] max-w-[700px] text-[44px] leading-[.98] tracking-[-1px] sm:text-[60px] lg:text-[78px] lg:tracking-[-1.5px]">
+        Guarda el teléfono. <span class="mt-2.5 inline-block border-4 border-tinta bg-white px-3 shadow-[6px_6px_0_#000]">El parque es el nivel.</span>
+      </h1>
+      <p class="max-w-[600px] text-[19px] font-medium leading-normal sm:text-[20px]">EcoQuest convierte una caminata en una expedición de ~20 minutos: tres misiones, unas cuantas fotos y una insignia al final. Una IA de pesos abiertos interpreta tus hallazgos; tú pones los pasos.</p>
+      <div class="mt-8 flex flex-col gap-5 xs:flex-row xs:flex-wrap xs:items-center">
+        <!-- TODO: URL de la demo [Por definir] (D1) -->
+        <a class="btn btn-lg leading-normal" href="#">¡Jugar la demo!</a>
+        <!-- TODO: URL del repositorio GitHub [Por definir] (D2) -->
+        <a class="btn btn-lg btn-sec leading-normal" href="#">Ver el código</a>
+      </div>
+      <div class="mt-[30px] max-w-[560px]" aria-hidden="true">
+        <div class="xp-cont"><div class="fill" style="width:58%"></div><span class="lbl">EXP</span></div>
+      </div>
+      <p class="mt-[18px] flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm font-bold leading-normal"><span>Sin cuenta</span><span class="inline-block h-2 w-2 bg-tinta" aria-hidden="true"></span><span>Sin ubicación precisa</span><span class="inline-block h-2 w-2 bg-tinta" aria-hidden="true"></span><span>Código abierto</span></p>
+    </div>
+
+    <!-- Derecha: arte -->
+    <div class="relative mx-auto mt-10 w-full max-w-[380px] lg:mt-0 lg:h-full lg:max-w-none">
+      <p class="relative z-0 mx-auto -mb-6 w-[262px] -rotate-3 border-4 border-tinta bg-tinta px-[22px] pb-[22px] pt-5 text-voltio shadow-[8px_8px_0_0_#FF3EA5] lg:absolute lg:left-[-6px] lg:top-[118px] lg:m-0">
+        <q class="block font-display text-[30px] italic leading-[1.08] [quotes:none]" lang="en">The Real World Is Your Playground.</q>
+      </p>
+
+      <div aria-hidden="true" class="absolute left-[536px] top-[150px] hidden h-[104px] w-[104px] rotate-6 items-center justify-center border-4 border-tinta bg-voltio shadow-brutal lg:flex"><img src="assets/icons/tree.svg" width="70" height="70" alt="" class="px"></div>
+      <div aria-hidden="true" class="absolute left-[548px] top-[452px] hidden h-[84px] w-[84px] -rotate-[5deg] items-center justify-center border-4 border-tinta bg-turbo shadow-brutal lg:flex"><img src="assets/icons/flower.svg" width="56" height="56" alt="" class="px"></div>
+      <div aria-hidden="true" class="absolute left-[96px] top-[596px] hidden h-[76px] w-[76px] rotate-[4deg] items-center justify-center border-4 border-tinta bg-glitch shadow-brutal lg:flex"><img src="assets/icons/eye.svg" width="48" height="48" alt="" class="px"></div>
+
+      <!-- Teléfono: Pantalla 1 · Bienvenida -->
+      <figure class="relative z-10 mx-auto w-[296px] pb-16 lg:absolute lg:left-[218px] lg:top-[62px] lg:pb-0">
+        <div class="phone" role="img" aria-label="Pantalla de ejemplo de EcoQuest, Bienvenida: expedición Descubre el Edén en el Parque Tomás Garrido Canabal, ~20 min y 3 misiones, aviso de seguridad y botón ¡Comenzar!">
+          <div class="notch"></div>
+          <div class="screen" aria-hidden="true">
+            <div class="sbar"><span>9:41</span><span>▮▮▮ ▰</span></div>
+            <div class="scr-body bg-lima">
+              <div class="pix mt-1.5 text-[23px] leading-[1.15] [text-shadow:3px_3px_0_#fff]">ECO<br>QUEST</div>
+              <div class="-rotate-[1.5deg] self-start bg-tinta px-[9px] py-1.5 font-display text-[15px] leading-[1.35] text-voltio">The Real World Is Your Playground.</div>
+              <div class="border-3 border-tinta bg-white px-[11px] py-2.5 shadow-[4px_4px_0_#000]">
+                <span class="pix text-[9px]">Expedición</span>
+                <div class="scr-title my-1">Descubre el Edén</div>
+                <div class="text-[13.5px] font-bold leading-[1.3]">Parque Tomás Garrido Canabal<br>~20 min · 3 misiones</div>
+              </div>
+              <div class="safety"><b><span class="warn-ico">⚠</span> ANTES DE SALIR</b>No toques fauna ni arranques plantas. Quédate en senderos y lejos del borde del agua.</div>
+              <div class="flex-1"></div>
+              <span class="btn">¡Comenzar!</span>
+              <div class="text-center text-[12px] font-medium leading-[1.3]">Sin cuenta · Sin ubicación precisa</div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="phone-cap absolute left-1/2 top-[640px] -translate-x-1/2 leading-normal">Pantalla de ejemplo. Prototipo en construcción.</figcaption>
+      </figure>
+
+      <!-- Tarjeta de misión flotante (estilo Pantalla 2 · Misiones) -->
+      <div aria-hidden="true" class="absolute left-[-14px] top-[388px] z-20 hidden w-[240px] -rotate-2 grid-cols-[44px_1fr] items-center gap-2.5 border-3 border-tinta bg-white p-[9px] shadow-brutal lg:grid">
+        <div class="flex h-11 w-11 items-center justify-center border-2 border-tinta bg-lima"><img src="assets/icons/leaf.svg" width="32" height="32" alt="" class="px"></div>
+        <div><span class="pix block text-[10px]">MISIÓN 1/3</span><b class="block text-[15px] leading-[1.15]">Hoja de gran tamaño</b><span class="chip mt-1 text-[11px]">Pendiente</span></div>
+      </div>
+
+      <!-- Stickers ±2° -->
+      <span class="sticker absolute right-[-6px] top-[150px] z-20 bg-voltio lg:left-[430px] lg:right-auto lg:top-[40px]">SCREEN-LAST</span>
+      <span class="sticker sticker-r absolute left-[-6px] top-[520px] z-20 bg-glitch lg:left-[6px] lg:top-[510px]">IA ABIERTA <span class="sep" aria-hidden="true"></span><span class="sr-only">·</span> SIGLIP2</span>
+      <span class="sticker absolute right-[-6px] top-[700px] z-20 bg-turbo lg:left-[496px] lg:right-auto lg:top-[572px]">SIN CUENTA</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 2 · EL PROBLEMA ======================= -->
+<section id="problema" class="border-b-4 border-tinta bg-selva bg-dots-selva py-20 text-papel lg:py-28" aria-labelledby="problema-title">
+  <div class="wrap grid items-center gap-14 lg:grid-cols-[1fr_1.05fr] lg:gap-16">
+    <div>
+      <p class="eyebrow eyebrow-dark">EL PROBLEMA</p>
+      <h2 id="problema-title" class="h2 mt-6 text-papel">Casi todas las apps quieren que no te vayas.</h2>
+      <p class="lead mt-6 text-papel">Feeds infinitos, rachas, notificaciones: muchas experiencias digitales te premian por seguir mirando. EcoQuest juega al revés: usa el teléfono solo para arrancar la aventura y la IA para interpretar lo que encuentras, no para retenerte.</p>
+    </div>
+    <div class="relative grid gap-12 text-tinta sm:grid-cols-2 sm:gap-14">
+      <article class="card card-lg relative">
+        <h3 class="text-[26px] leading-tight line-through decoration-[5px]">El juego de siempre</h3>
+        <ul class="mt-4 text-[17px] font-medium">
+          <li class="li-x">Te premia por quedarte</li>
+          <li class="li-x">Te llama de vuelta con notificaciones</li>
+          <li class="li-x">La pantalla es el mundo</li>
+        </ul>
+      </article>
+      <span class="sticker absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 bg-voltio px-4 py-2 text-[22px] sm:-rotate-6" aria-hidden="true">VS</span>
+      <article class="card card-lg bg-lima">
+        <h3 class="flex items-center gap-2.5 text-[26px] leading-tight"><img src="assets/icons/leaf.svg" width="32" height="32" alt="" class="px">EcoQuest</h3>
+        <ul class="mt-4 text-[17px] font-medium">
+          <li class="li-ok">Te premia por salir y observar</li>
+          <li class="li-ok">Sin feeds ni notificaciones que te jalen</li>
+          <li class="li-ok">El mundo es la pantalla… bueno, el parque</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 3 · CÓMO SE JUEGA ======================= -->
+<section id="como-se-juega" class="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="como-title">
+  <div class="wrap">
+    <div class="max-w-[820px]">
+      <p class="eyebrow">CÓMO SE JUEGA</p>
+      <h2 id="como-title" class="h2 mt-6">Cuatro niveles. Cero manuales.</h2>
+      <p class="lead mt-5">La app aparece solo al principio, cuando encuentras algo y al final. Lo demás pasa con el teléfono en la bolsa.</p>
+    </div>
+
+    <!-- Mapa de niveles (XpBar segmentada, decorativa) -->
+    <div class="xp mt-12 h-12" aria-hidden="true">
+      <i class="flex items-center justify-center border-solid bg-lima font-pixel text-[13px] font-bold">1</i>
+      <i class="flex items-center justify-center border-solid bg-voltio font-pixel text-[13px] font-bold">2</i>
+      <i class="flex items-center justify-center border-solid bg-glitch font-pixel text-[13px] font-bold">3</i>
+      <i class="flex items-center justify-center border-solid bg-turbo font-pixel text-[13px] font-bold">4</i>
+    </div>
+
+    <ol class="mt-10 grid gap-14 md:grid-cols-2 md:gap-x-12 lg:grid-cols-4 lg:gap-x-12">
+      <li class="relative flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="pix border-b-4 border-tinta bg-lima px-4 py-2.5 text-[14px]">NIVEL 1</div>
+        <div class="flex flex-1 flex-col gap-3 p-5">
+          <img src="assets/icons/star.svg" width="48" height="48" alt="" class="px px-shadow">
+          <h3 class="text-[23px] leading-[1.1]">Elige tu expedición</h3>
+          <p class="text-[17px] leading-snug">Abre EcoQuest, revisa tus 3 misiones y lee el aviso de seguridad. Sin registro.</p>
+        </div>
+        <img src="assets/icons/arrow.svg" width="32" height="28" alt="" class="px absolute -bottom-11 left-1/2 -translate-x-1/2 rotate-90 md:hidden lg:-right-10 lg:bottom-auto lg:left-auto lg:top-1/2 lg:block lg:translate-x-0 lg:rotate-0">
+      </li>
+      <li class="relative flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="pix border-b-4 border-tinta bg-voltio px-4 py-2.5 text-[14px]">NIVEL 2</div>
+        <div class="flex flex-1 flex-col gap-3 p-5">
+          <img src="assets/icons/phone.svg" width="48" height="48" alt="" class="px px-shadow">
+          <h3 class="text-[23px] leading-[1.1]">Guarda el teléfono</h3>
+          <p class="text-[17px] leading-snug">Camina, mira, escucha. Sácalo solo cuando encuentres algo.</p>
+        </div>
+        <img src="assets/icons/arrow.svg" width="32" height="28" alt="" class="px absolute -bottom-11 left-1/2 -translate-x-1/2 rotate-90 md:hidden lg:-right-10 lg:bottom-auto lg:left-auto lg:top-1/2 lg:block lg:translate-x-0 lg:rotate-0">
+      </li>
+      <li class="relative flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="pix border-b-4 border-tinta bg-glitch px-4 py-2.5 text-[14px]">NIVEL 3</div>
+        <div class="flex flex-1 flex-col gap-3 p-5">
+          <img src="assets/icons/camera.svg" width="48" height="48" alt="" class="px px-shadow">
+          <h3 class="text-[23px] leading-[1.1]">Captura tu hallazgo</h3>
+          <p class="text-[17px] leading-snug">Una foto por misión. La IA abierta te dice si se parece a lo que buscabas… o si no está segura.</p>
+        </div>
+        <img src="assets/icons/arrow.svg" width="32" height="28" alt="" class="px absolute -bottom-11 left-1/2 -translate-x-1/2 rotate-90 md:hidden lg:-right-10 lg:bottom-auto lg:left-auto lg:top-1/2 lg:block lg:translate-x-0 lg:rotate-0">
+      </li>
+      <li class="relative flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="pix border-b-4 border-tinta bg-turbo px-4 py-2.5 text-[14px]">NIVEL 4</div>
+        <div class="flex flex-1 flex-col gap-3 p-5">
+          <img src="assets/icons/medal.svg" width="48" height="48" alt="" class="px px-shadow">
+          <h3 class="text-[23px] leading-[1.1]">Gana tu insignia</h3>
+          <p class="text-[17px] leading-snug">Ve tu resumen de hallazgos y el tiempo en sesión. Expedición completada.</p>
+        </div>
+      </li>
+    </ol>
+    <p class="mt-12 inline-flex items-center gap-3 border-3 border-tinta bg-white px-4 py-3 text-[17px] font-bold shadow-brutal-sm"><img src="assets/icons/check.svg" width="24" height="24" alt="" class="px">Sin feeds, sin rachas, sin notificaciones que te llamen de vuelta.</p>
+  </div>
+</section>
+
+<!-- ======================= 4 · EXPEDICIÓN PILOTO ======================= -->
+<section id="expedicion" class="border-b-4 border-tinta bg-voltio py-20 lg:py-28" aria-labelledby="expedicion-title">
+  <div class="wrap">
+    <div class="max-w-[860px]">
+      <p class="eyebrow">EXPEDICIÓN PILOTO<span class="sep" aria-hidden="true"></span><span class="sr-only"> · </span>MUNDO 1</p>
+      <h2 id="expedicion-title" class="h2 mt-6">Descubre el Edén</h2>
+      <p class="lead mt-5">Parque Tomás Garrido Canabal, Villahermosa, Tabasco. ~20 minutos · 3 misiones · 1 insignia.</p>
+    </div>
+
+    <div class="mt-12 grid items-start gap-14 lg:grid-cols-12 lg:gap-10">
+      <!-- Ficha de cartucho + aviso -->
+      <div class="flex flex-col gap-7 lg:col-span-5">
+        <div class="card card-lg p-0">
+          <div class="flex items-center justify-between border-b-4 border-tinta bg-tinta px-5 py-3">
+            <span class="flex gap-2" aria-hidden="true"><i class="block h-3 w-3 bg-lima"></i><i class="block h-3 w-3 bg-voltio"></i><i class="block h-3 w-3 bg-turbo"></i><i class="block h-3 w-3 bg-glitch"></i></span>
+            <img src="assets/icons/tree.svg" width="30" height="30" alt="" class="px">
+          </div>
+          <dl class="divide-y-3 divide-tinta px-5">
+            <div class="grid gap-1 py-4 sm:grid-cols-[180px_1fr] sm:items-baseline"><dt class="pix text-[13px]">LUGAR:</dt><dd class="text-[18px] font-bold leading-snug">Parque Tomás Garrido Canabal</dd></div>
+            <div class="grid gap-1 py-4 sm:grid-cols-[180px_1fr] sm:items-baseline"><dt class="pix text-[13px]">DURACIÓN:</dt><dd class="text-[18px] font-bold">~20 min</dd></div>
+            <div class="grid gap-1 py-4 sm:grid-cols-[180px_1fr] sm:items-baseline"><dt class="pix text-[13px]">MISIONES:</dt><dd class="text-[18px] font-bold">3</dd></div>
+            <div class="grid gap-1 py-4 sm:grid-cols-[180px_1fr] sm:items-baseline"><dt class="pix text-[13px]">RECOMPENSA:</dt><dd class="text-[18px] font-bold leading-snug">Insignia «Descubre el Edén»</dd></div>
+          </dl>
+        </div>
+        <aside class="border-4 border-tinta bg-lava p-5 shadow-brutal" aria-labelledby="aviso-title">
+          <h3 id="aviso-title" class="pix flex items-center gap-2.5 text-[14px]"><img src="assets/icons/warn.svg" width="28" height="28" alt="" class="px"><span><span class="sr-only">Aviso: </span>ANTES DE SALIR</span></h3>
+          <p class="mt-3 text-[18px] font-medium leading-snug">No toques fauna ni arranques plantas. Quédate en senderos y zonas permitidas, y lejos del borde del agua.</p>
+        </aside>
+        <p class="text-sm font-medium">Las misiones pueden ajustarse tras las pruebas en el parque: si la IA no las valida bien, las cambiamos.</p>
+        <div>
+          <!-- TODO: URL de la demo [Por definir] (D1) -->
+          <a class="btn" href="#">¡Empezar la expedición!</a>
+        </div>
+      </div>
+
+      <!-- Pantalla 2 · Misiones -->
+      <figure class="flex flex-col items-center gap-6 lg:col-span-4">
+        <div class="phone phone-lima" role="img" aria-label="Pantalla de ejemplo de EcoQuest, Misiones: progreso 1 de 3; hoja de gran tamaño con estado Coincidencia; flor y árbol pendientes; recordatorio de guardar el teléfono y botón Capturar hallazgo">
+          <div class="notch"></div>
+          <div class="screen" aria-hidden="true">
+            <div class="sbar"><span>9:52</span><span>▮▮▮ ▰</span></div>
+            <div class="scr-body">
+              <div class="hud"><span class="pix">Descubre el Edén</span><span class="pix">1/3</span></div>
+              <div class="xp h-[30px]"><i class="on"></i><i></i><i></i></div>
+              <div class="mini bg-[#F2FFE0]"><div class="ico bg-lima"><img src="assets/icons/leaf.svg" width="24" height="24" alt="" class="px"></div><div><b>Hoja de gran tamaño</b><span class="st bg-lima">✓ Coincidencia</span></div></div>
+              <div class="mini"><div class="ico bg-turbo"><img src="assets/icons/flower.svg" width="24" height="24" alt="" class="px"></div><div><b>Flor y sus colores</b><span class="st">Pendiente</span></div></div>
+              <div class="mini"><div class="ico bg-voltio"><img src="assets/icons/tree.svg" width="30" height="30" alt="" class="px"></div><div><b>Árbol con raíces visibles</b><span class="st">Pendiente</span></div></div>
+              <div class="border-3 border-tinta bg-glitch px-2.5 py-[9px] text-[13px] font-bold leading-[1.3]">Guarda el teléfono. Sácalo solo cuando encuentres algo.</div>
+              <div class="flex-1"></div>
+              <span class="btn btn-ia"><img src="assets/icons/camera.svg" width="24" height="24" alt="" class="px">Capturar hallazgo</span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="phone-cap mt-3">Pantallas y datos de ejemplo.</figcaption>
+      </figure>
+
+      <!-- Insignia -->
+      <div class="flex justify-center lg:col-span-3 lg:pt-10">
+        <figure class="badge" role="img" aria-label="Insignia Descubre el Edén">
+          <div class="ring"></div><div class="inner"></div>
+          <div class="content"><img src="assets/icons/tree.svg" width="50" height="50" alt="" class="px px-shadow"><span class="pix text-[11px] leading-[1.4]">Descubre<br>el Edén</span></div>
+          <div class="ribbon">INSIGNIA</div>
+        </figure>
+      </div>
+    </div>
+
+    <!-- MissionCards -->
+    <ul class="mt-16 grid gap-8 md:grid-cols-3">
+      <li class="grid grid-cols-[64px_1fr] gap-3.5 border-4 border-tinta bg-white p-3.5 shadow-brutal">
+        <div class="flex h-16 w-16 items-center justify-center border-3 border-tinta bg-lima"><img src="assets/icons/leaf.svg" width="40" height="40" alt="" class="px"></div>
+        <div><span class="pix text-[12px]">MISIÓN 1/3</span><h3 class="mb-1.5 mt-1 text-[21px] leading-[1.1]">Encuentra una hoja de gran tamaño</h3><p class="text-[16px] leading-snug">Busca una hoja que te sorprenda por su tamaño. Tómale una foto; no la arranques.</p></div>
+        <div class="col-span-full flex items-center justify-between gap-2.5 border-t-3 border-tinta pt-3"><span class="chip">Pendiente</span><img src="assets/icons/camera.svg" width="24" height="24" alt="" class="px"></div>
+      </li>
+      <li class="grid grid-cols-[64px_1fr] gap-3.5 border-4 border-tinta bg-white p-3.5 shadow-brutal">
+        <div class="flex h-16 w-16 items-center justify-center border-3 border-tinta bg-turbo"><img src="assets/icons/flower.svg" width="40" height="40" alt="" class="px"></div>
+        <div><span class="pix text-[12px]">MISIÓN 2/3</span><h3 class="mb-1.5 mt-1 text-[21px] leading-[1.1]">Descubre una flor y registra sus colores</h3><p class="text-[16px] leading-snug">Encuentra una flor y fotografíala de cerca, sin cortarla.</p></div>
+        <div class="col-span-full flex items-center justify-between gap-2.5 border-t-3 border-tinta pt-3"><span class="chip">Pendiente</span><img src="assets/icons/camera.svg" width="24" height="24" alt="" class="px"></div>
+      </li>
+      <li class="grid grid-cols-[64px_1fr] gap-3.5 border-4 border-tinta bg-white p-3.5 shadow-brutal">
+        <div class="flex h-16 w-16 items-center justify-center border-3 border-tinta bg-voltio"><img src="assets/icons/tree.svg" width="50" height="50" alt="" class="px"></div>
+        <div><span class="pix text-[12px]">MISIÓN 3/3</span><h3 class="mb-1.5 mt-1 text-[21px] leading-[1.1]">Encuentra un árbol con raíces visibles</h3><p class="text-[16px] leading-snug">Busca raíces que salgan del suelo y captúralas desde el sendero.</p></div>
+        <div class="col-span-full flex items-center justify-between gap-2.5 border-t-3 border-tinta pt-3"><span class="chip">Pendiente</span><img src="assets/icons/camera.svg" width="24" height="24" alt="" class="px"></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ======================= 5 · IA ABIERTA ======================= -->
+<section id="ia-abierta" class="border-b-4 border-tinta bg-papel" aria-labelledby="ia-title">
+  <div class="border-b-4 border-tinta bg-glitch py-16 lg:py-20">
+    <div class="wrap">
+      <p class="eyebrow">IA ABIERTA<span class="sep" aria-hidden="true"></span><span class="sr-only"> · </span>SIGLIP2</p>
+      <h2 id="ia-title" class="h2 mt-6 max-w-[900px]">Una IA que dice «no estoy segura».</h2>
+      <p class="lead mt-5 max-w-[820px]">EcoQuest usa SigLIP2, un modelo de pesos abiertos que compara tu foto con descripciones de texto. No adivina especies ni finge certezas: si no está segura, te lo dice.</p>
+    </div>
+  </div>
+
+  <div class="wrap py-16 lg:py-24">
+    <!-- Bloque 1: pasos -->
+    <ol class="grid gap-14 lg:grid-cols-3 lg:gap-14">
+      <li class="card relative">
+        <div class="flex items-center gap-3"><span class="pix flex h-10 w-10 items-center justify-center border-3 border-tinta bg-voltio text-[14px] shadow-brutal-sm">1</span><img src="assets/icons/camera.svg" width="40" height="40" alt="" class="px"></div>
+        <h3 class="mt-4 text-[23px] leading-tight">Tomas la foto.</h3>
+        <p class="mt-2 text-[17px] leading-snug">Se reduce en tu teléfono antes de enviarse.</p>
+        <img src="assets/icons/arrow.svg" width="32" height="28" alt="" class="px absolute -bottom-11 left-1/2 -translate-x-1/2 rotate-90 lg:-right-11 lg:bottom-auto lg:left-auto lg:top-1/2 lg:translate-x-0 lg:rotate-0">
+      </li>
+      <li class="card relative bg-glitch">
+        <div class="flex items-center gap-3"><span class="pix flex h-10 w-10 items-center justify-center border-3 border-tinta bg-voltio text-[14px] shadow-brutal-sm">2</span><img src="assets/icons/eye.svg" width="40" height="40" alt="" class="px"></div>
+        <h3 class="mt-4 text-[23px] leading-tight">SigLIP2 la compara.</h3>
+        <p class="mt-2 text-[17px] leading-snug">Mide qué tanto se parece a la categoría de la misión («hoja», «flor visible», «tronco/raíces») frente a otras categorías de contraste.</p>
+        <img src="assets/icons/arrow.svg" width="32" height="28" alt="" class="px absolute -bottom-11 left-1/2 -translate-x-1/2 rotate-90 lg:-right-11 lg:bottom-auto lg:left-auto lg:top-1/2 lg:translate-x-0 lg:rotate-0">
+      </li>
+      <li class="card relative">
+        <div class="flex items-center gap-3"><span class="pix flex h-10 w-10 items-center justify-center border-3 border-tinta bg-voltio text-[14px] shadow-brutal-sm">3</span><img src="assets/icons/check.svg" width="40" height="40" alt="" class="px"></div>
+        <h3 class="mt-4 text-[23px] leading-tight">La misión decide.</h3>
+        <p class="mt-2 text-[17px] leading-snug">Si el parecido supera el umbral de la misión, cuenta como coincidencia. Si no, te ofrece opciones.</p>
+      </li>
+    </ol>
+
+    <div class="mt-20 grid items-start gap-14 lg:grid-cols-[auto_1fr] lg:gap-16">
+      <!-- Bloque 2: Pantalla 3 · Resultado de IA -->
+      <figure class="flex flex-col items-center gap-6">
+        <div class="phone phone-lima" role="img" aria-label="Pantalla de ejemplo de EcoQuest, Resultado de IA de la misión 2 de 3: estado No confirmado; la IA no está segura de que haya una flor visible; barra de parecido por debajo del umbral; botones Tomar otra foto y Marcar manualmente, no verificada">
+          <div class="notch"></div>
+          <div class="screen" aria-hidden="true">
+            <div class="sbar"><span>10:03</span><span>▮▮▮ ▰</span></div>
+            <div class="scr-body">
+              <div class="hud"><span class="pix">Misión 2/3</span><span class="pix border-2 border-tinta bg-glitch px-[5px] py-[3px]">IA</span></div>
+              <div class="relative h-[150px] flex-none overflow-hidden border-3 border-tinta bg-[#3a7d2c]">
+                <img src="assets/icons/leaf.svg" width="72" height="72" alt="" class="px absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <span class="absolute left-2 top-2 h-[22px] w-[22px] border-l-4 border-t-4 border-white"></span><span class="absolute right-2 top-2 h-[22px] w-[22px] border-r-4 border-t-4 border-white"></span>
+                <span class="absolute bottom-2 left-2 h-[22px] w-[22px] border-b-4 border-l-4 border-white"></span><span class="absolute bottom-2 right-2 h-[22px] w-[22px] border-b-4 border-r-4 border-white"></span>
+              </div>
+              <span class="status self-start bg-voltio text-[15px]"><span class="s-ico">?</span>No confirmado</span>
+              <div class="text-[15px] font-bold leading-[1.3]">La IA no está segura de que haya una flor visible.</div>
+              <div class="border-3 border-tinta bg-white px-2.5 py-2 text-[13px]">Parecido con «flor visible»
+                <div class="relative mt-1.5 h-4 border-2 border-tinta bg-white"><i class="absolute inset-y-0 left-0 w-[28%] border-r-2 border-tinta bg-voltio"></i><span class="absolute -bottom-[5px] -top-[5px] left-[60%] border-l-[3px] border-dashed border-tinta"></span></div>
+                <div class="mt-1 text-[12px] font-medium leading-[1.3]">— — umbral de la misión</div>
+              </div>
+              <div class="flex-1"></div>
+              <span class="btn">Tomar otra foto</span>
+              <span class="btn btn-ghost min-h-12 whitespace-normal py-2 text-[14px] leading-tight">Marcar manualmente · no verificada</span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="phone-cap mt-3 whitespace-normal text-center">Pantalla de ejemplo; el umbral real se definirá con pruebas.</figcaption>
+      </figure>
+
+      <div>
+        <!-- Bloque 3: estados -->
+        <h3 class="text-[30px] leading-tight sm:text-[34px]">Cuatro resultados posibles. Todos honestos.</h3>
+        <ul class="mt-7 grid gap-6 md:grid-cols-2">
+          <li class="card p-5">
+            <span class="status bg-lima text-[17px]"><span class="s-ico" aria-hidden="true">✓</span>Coincidencia</span>
+            <p class="mt-3.5 text-[17px] leading-snug"><b>«Parece una hoja. ¡Misión completada!»</b> Es tentativa: significa <i>se parece</i>, no <i>está verificado</i>.</p>
+          </li>
+          <li class="card p-5">
+            <span class="status bg-voltio text-[17px]"><span class="s-ico" aria-hidden="true">?</span>No confirmado</span>
+            <p class="mt-3.5 text-[17px] leading-snug"><b>«No estamos seguros. ¿Otra foto?»</b> La IA no encontró suficiente parecido.</p>
+          </li>
+          <li class="card p-5">
+            <span class="status bg-lava text-[17px]"><span class="s-ico" aria-hidden="true">↻</span>Reintentar</span>
+            <p class="mt-3.5 text-[17px] leading-snug"><b>«No pudimos analizar la foto. Inténtalo de nuevo.»</b> Falló la red, el servicio o la imagen.</p>
+          </li>
+          <li class="card p-5">
+            <span class="status bg-turbo text-[17px]"><span class="s-ico" aria-hidden="true">✋</span><span>Revisión manual<small class="block text-[12px] font-bold uppercase tracking-[0.5px]">No verificada</small></span></span>
+            <p class="mt-3.5 text-[17px] leading-snug">Tú marcas la misión y queda etiquetada así en tu progreso, resumen e insignia. Sin trampas escondidas.</p>
+          </li>
+        </ul>
+
+        <!-- Bloque 4: lo que la IA no hace -->
+        <div class="card card-lg mt-10">
+          <h3 class="text-[26px] leading-tight">Lo que la IA no hace</h3>
+          <ul class="mt-3 text-[17px] font-medium">
+            <li class="li-x">No identifica especies ni da nombres científicos.</li>
+            <li class="li-x">No convierte el parecido en un porcentaje de certeza.</li>
+            <li class="li-x">No mide cuánto caminaste ni tu tiempo fuera de pantalla.</li>
+            <li class="li-x">No guarda tus fotos después de analizarlas.</li>
+          </ul>
+        </div>
+
+        <p class="mt-8 border-l-4 border-tinta pl-4 text-sm leading-relaxed">Modelo de referencia: <code class="break-all bg-tinta px-1.5 py-px font-mono text-[15px] text-lima">google/siglip2-base-patch16-256</code> (variante final [Por definir]). Licencia de los pesos: [Por definir]. Inferencia en servidor con Python + Transformers; proveedor de hospedaje [Por definir]. Pesos abiertos no significa offline: por ahora necesitas conexión.</p>
+        <div class="mt-8">
+          <!-- TODO: URL del repositorio GitHub [Por definir] (D2) -->
+          <a class="btn btn-sec" href="#">Ver cómo está hecho</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 6 · REGLAS DE LA PARTIDA ======================= -->
+<section id="principios" class="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="reglas-title">
+  <div class="wrap">
+    <div class="relative block pr-0 sm:inline-block sm:pr-6">
+      <p class="eyebrow">REGLAS DE LA PARTIDA</p>
+      <h2 id="reglas-title" class="h2 mt-6">Jugamos limpio.</h2>
+      <span class="sticker sticker-r relative mt-5 bg-turbo text-[15px] sm:absolute sm:-right-36 sm:top-[66px] sm:mt-0" aria-hidden="true">REGLAS</span>
+    </div>
+    <ul class="mt-12 grid gap-8 md:grid-cols-2">
+      <li class="flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="h-5 border-b-4 border-tinta bg-lima" aria-hidden="true"></div>
+        <div class="flex items-start gap-4 p-6"><img src="assets/icons/phone.svg" width="48" height="48" alt="" class="px px-shadow"><div><h3 class="text-[24px] leading-tight">Screen-last</h3><p class="mt-2 text-[17px] leading-snug">Pocas pantallas, casi nada que escribir y una acción principal por pantalla. La app es el menú de pausa; el juego está afuera.</p></div></div>
+      </li>
+      <li class="flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="h-5 border-b-4 border-tinta bg-glitch" aria-hidden="true"></div>
+        <div class="flex items-start gap-4 p-6"><img src="assets/icons/eye.svg" width="48" height="48" alt="" class="px px-shadow"><div><h3 class="text-[24px] leading-tight">Explora antes de capturar</h3><p class="mt-2 text-[17px] leading-snug">Una foto cuando encuentras algo, no una ráfaga. Mira primero; dispara después.</p></div></div>
+      </li>
+      <li class="flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="h-5 border-b-4 border-tinta bg-lava" aria-hidden="true"></div>
+        <div class="flex items-start gap-4 p-6"><img src="assets/icons/warn.svg" width="48" height="48" alt="" class="px px-shadow"><div><h3 class="text-[24px] leading-tight">Seguridad y respeto ambiental</h3><p class="mt-2 text-[17px] leading-snug">No toques fauna, no recolectes ni arranques, quédate en senderos y zonas permitidas, y lejos del borde del agua.</p></div></div>
+      </li>
+      <li class="flex flex-col border-4 border-tinta bg-white shadow-brutal">
+        <div class="h-5 border-b-4 border-tinta bg-turbo" aria-hidden="true"></div>
+        <div class="flex items-start gap-4 p-6"><img src="assets/icons/lock.svg" width="48" height="48" alt="" class="px px-shadow"><div><h3 class="text-[24px] leading-tight">Privacidad por defecto</h3><p class="mt-2 text-[17px] leading-snug">Sin cuenta, sin correo, sin ubicación precisa. Tu progreso vive en tu teléfono y puedes borrar tus fotos cuando quieras.</p></div></div>
+      </li>
+    </ul>
+    <p class="mt-10 text-[17px] font-bold">Hecho para leerse bajo el sol de Tabasco: alto contraste, letras grandes, botones grandes.</p>
+  </div>
+</section>
+
+<!-- ======================= 7 · HECHO EN VILLAHERMOSA ======================= -->
+<section id="villahermosa" class="border-b-4 border-tinta bg-selva bg-dots-selva py-20 text-papel lg:py-28" aria-labelledby="vhsa-title">
+  <div class="wrap grid items-center gap-14 lg:grid-cols-2 lg:gap-16">
+    <div>
+      <p class="eyebrow eyebrow-dark">HECHO EN VILLAHERMOSA</p>
+      <h2 id="vhsa-title" class="h2 mt-6 text-papel">Nuestro primer mundo es tropical.</h2>
+      <p class="lead mt-6 text-papel">EcoQuest nace en Villahermosa, Tabasco, y su primera expedición vive en el Parque Tomás Garrido Canabal. Calor, humedad y lluvias forman parte del nivel, por eso las misiones son cortas y flexibles.</p>
+      <ul class="mt-8 flex flex-wrap gap-3 text-tinta">
+        <li class="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Lleva agua</li>
+        <li class="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Ve con calzado para terreno mojado</li>
+        <li class="border-3 border-tinta bg-voltio px-3.5 py-2 text-[16px] font-bold shadow-brutal-sm">Si llueve fuerte, deja la partida para otro día</li>
+      </ul>
+      <p class="mt-8 text-sm text-papel">Antes de jugar, respeta el reglamento y horarios del parque.</p>
+    </div>
+    <div class="flex flex-col gap-10">
+      <!-- «Mapa» estilizado: no es un mapa real, sin coordenadas -->
+      <figure class="relative h-[300px] border-4 border-tinta bg-lima shadow-brutal-lg sm:h-[340px]" role="img" aria-label="Ilustración pixel del Parque Tomás Garrido Canabal (no es un mapa real)">
+        <div class="absolute inset-x-0 top-[46%] h-0 border-t-4 border-dashed border-tinta" aria-hidden="true"></div>
+        <div class="absolute inset-y-0 left-[38%] w-0 border-l-4 border-dashed border-tinta" aria-hidden="true"></div>
+        <div class="absolute bottom-6 right-6 h-[90px] w-[38%] border-4 border-tinta bg-glitch" aria-hidden="true"></div>
+        <img src="assets/icons/tree.svg" width="60" height="60" alt="" class="px px-shadow absolute left-[8%] top-[10%]">
+        <img src="assets/icons/tree.svg" width="40" height="40" alt="" class="px px-shadow absolute left-[20%] top-[60%]">
+        <img src="assets/icons/tree.svg" width="50" height="50" alt="" class="px px-shadow absolute right-[12%] top-[8%]">
+        <img src="assets/icons/flower.svg" width="32" height="32" alt="" class="px px-shadow absolute left-[52%] top-[18%]">
+        <img src="assets/icons/leaf.svg" width="32" height="32" alt="" class="px px-shadow absolute bottom-[12%] left-[6%]">
+        <div class="absolute left-1/2 top-[46%] flex -translate-x-1/2 sm:left-[38%] -translate-y-full flex-col items-center" aria-hidden="true">
+          <span class="whitespace-nowrap border-3 border-tinta bg-white px-3 py-2 text-[15px] font-bold leading-tight text-tinta shadow-brutal-sm">Parque Tomás Garrido Canabal</span>
+          <img src="assets/icons/pin.svg" width="40" height="40" alt="" class="px px-shadow mt-1">
+        </div>
+        <span class="sticker absolute -bottom-4 left-5 bg-voltio" aria-hidden="true">MUNDO 1</span>
+      </figure>
+      <!-- Evidencia de la salida real: se reemplaza cuando exista (D10) -->
+      <div class="border-4 border-dashed border-papel p-6">
+        <p class="text-[20px] font-bold leading-snug text-papel">Próximamente: la bitácora de nuestra primera salida, con aciertos y errores.</p>
+        <p class="mt-2 text-sm text-papel">Evidencia de la salida real: [Por definir]</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 8 · BAJO EL CAPÓ ======================= -->
+<section id="stack" class="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="stack-title">
+  <div class="wrap">
+    <div class="max-w-[820px]">
+      <p class="eyebrow">BAJO EL CAPÓ</p>
+      <h2 id="stack-title" class="h2 mt-6">Simple por fuera. Abierto por dentro.</h2>
+    </div>
+    <figure class="mt-12" aria-label="Diagrama de arquitectura de EcoQuest">
+      <ol class="grid gap-12 lg:grid-cols-6 lg:gap-9">
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-lima p-4 text-[17px] font-bold leading-snug shadow-brutal">Tú en el parque<img src="assets/icons/arrow.svg" width="24" height="21" alt="" class="px absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-90 lg:-right-[33px] lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0"></li>
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-white p-4 text-[17px] font-bold leading-snug shadow-brutal">Web móvil (expedición, misiones, cámara)<img src="assets/icons/arrow.svg" width="24" height="21" alt="" class="px absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-90 lg:-right-[33px] lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0"></li>
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-white p-4 text-[17px] font-bold leading-snug shadow-brutal">API de clasificación (Python + Transformers)<img src="assets/icons/arrow.svg" width="24" height="21" alt="" class="px absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-90 lg:-right-[33px] lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0">
+          <!-- flecha punteada: la foto se descarta -->
+          <span class="absolute -right-3 top-full hidden h-14 border-l-4 border-dashed border-tinta lg:left-1/2 lg:block" aria-hidden="true"></span>
+        </li>
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-glitch p-4 text-[17px] font-bold leading-snug shadow-brutal">SigLIP2 · pesos abiertos<img src="assets/icons/arrow.svg" width="24" height="21" alt="" class="px absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-90 lg:-right-[33px] lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0"></li>
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-voltio p-4 text-[17px] font-bold leading-snug shadow-brutal">Reglas de misión + estado<img src="assets/icons/arrow.svg" width="24" height="21" alt="" class="px absolute -bottom-10 left-1/2 -translate-x-1/2 rotate-90 lg:-right-[33px] lg:bottom-auto lg:left-auto lg:top-1/2 lg:-translate-y-1/2 lg:translate-x-0 lg:rotate-0"></li>
+        <li class="relative flex min-h-[110px] items-center border-4 border-tinta bg-white p-4 text-[17px] font-bold leading-snug shadow-brutal">Progreso guardado en tu teléfono</li>
+      </ol>
+      <figcaption class="mt-10 lg:ml-[calc((100%-180px)/6*2+72px)] lg:mt-14">
+        <span class="inline-flex items-center gap-3 border-4 border-dashed border-tinta bg-white px-4 py-3 text-[16px] font-bold"><span aria-hidden="true" class="whitespace-nowrap font-pixel text-[14px]">- - &gt;</span>La foto se descarta tras el análisis</span>
+      </figcaption>
+    </figure>
+
+    <ul class="mt-14 flex flex-wrap gap-3" aria-label="Stack">
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">Next.js</li>
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">TypeScript</li>
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">Tailwind CSS</li>
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">shadcn/ui</li>
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">IndexedDB</li>
+      <li class="pix border-3 border-tinta bg-white px-3 py-2 text-[12px] shadow-brutal-sm">Python</li>
+      <li class="pix border-3 border-tinta bg-glitch px-3 py-2 text-[12px] shadow-brutal-sm">Transformers</li>
+      <li class="pix border-3 border-tinta bg-glitch px-3 py-2 text-[12px] shadow-brutal-sm">SigLIP2</li>
+    </ul>
+    <p class="lead mt-10">La IA no es un adorno: sin SigLIP2 no hay validación de misiones. Y ninguna pieza decisiva depende de un modelo propietario.</p>
+    <p class="mt-4 text-sm">Stack provisional; puede cambiar durante el desarrollo. Plataforma final (web móvil / PWA): [Por definir].</p>
+  </div>
+</section>
+
+<!-- ======================= 9 · OPEN SOURCE · CONTRIBUYE ======================= -->
+<section id="contribuye" class="border-b-4 border-tinta bg-tinta py-20 lg:py-28" aria-labelledby="contribuye-title">
+  <div class="wrap">
+    <div class="relative border-4 border-tinta bg-turbo p-6 shadow-[10px_10px_0_0_#000,10px_10px_0_4px_#B6FF3B] sm:p-10 lg:p-14">
+      <span class="sticker sticker-r absolute -top-5 right-4 bg-voltio text-[14px] sm:right-10">HACKTOBERFEST 2026</span>
+      <p class="eyebrow mt-4 sm:mt-0">OPEN SOURCE</p>
+      <h2 id="contribuye-title" class="h2 mt-6 max-w-[860px]">Player 2, únete a la partida.</h2>
+      <p class="lead mt-5 max-w-[760px]">EcoQuest es código abierto. Si te late la idea de una IA que te saca a pasear, hay misiones secundarias para ti.</p>
+      <ul class="mt-10 grid gap-7 md:grid-cols-3">
+        <li class="card">
+          <span class="pix text-[12px]">MISIÓN SECUNDARIA</span>
+          <h3 class="mt-2 text-[23px] leading-tight">Nuevas misiones</h3>
+          <p class="mt-2 text-[17px] leading-snug">Propón misiones visuales y ayúdanos a probarlas con fotos reales.</p>
+        </li>
+        <li class="card">
+          <span class="pix text-[12px]">MISIÓN SECUNDARIA</span>
+          <h3 class="mt-2 text-[23px] leading-tight">Pruebas del modelo</h3>
+          <p class="mt-2 text-[17px] leading-snug">Comparte casos difíciles: fotos ambiguas, negativas o con mala luz. Así afinamos umbrales.</p>
+        </li>
+        <li class="card">
+          <span class="pix text-[12px]">MISIÓN SECUNDARIA</span>
+          <h3 class="mt-2 text-[23px] leading-tight">Accesibilidad e idiomas</h3>
+          <p class="mt-2 text-[17px] leading-snug">Mejora contraste, lectura en exterior y traducciones.</p>
+        </li>
+      </ul>
+      <div class="mt-10 flex flex-col gap-5 xs:flex-row xs:flex-wrap">
+        <!-- TODO: URL del repositorio GitHub [Por definir] (D2) -->
+        <a class="btn" href="#">Ver el código</a>
+        <!-- TODO: [URL del repo]/issues [Por definir] (D2) -->
+        <a class="btn btn-sec" href="#">Abrir un issue</a>
+      </div>
+      <p class="mt-8 text-[17px] font-bold">Licencia del código: [Por definir] · Créditos y licencias del modelo y dependencias en el README.</p>
+      <p class="mt-2 text-sm font-medium">Fotos de prueba: solo con derechos de uso claros y sin personas identificables.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 10 · PRÓXIMOS NIVELES ======================= -->
+<section id="roadmap" class="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="roadmap-title">
+  <div class="wrap">
+    <div class="max-w-[820px]">
+      <p class="eyebrow">PRÓXIMOS NIVELES</p>
+      <h2 id="roadmap-title" class="h2 mt-6">El mapa apenas empieza.</h2>
+      <p class="lead mt-5">Ideas a explorar después del piloto, sin fechas ni promesas. Cada una entra solo si funciona en pruebas reales.</p>
+    </div>
+    <ol class="mt-14 grid grid-cols-1 gap-x-6 gap-y-6 xs:grid-cols-2 xs:gap-y-10 lg:grid-cols-4">
+      <li class="flex items-center gap-2 text-left xs:col-span-2 xs:flex-col xs:gap-0 xs:text-center lg:col-span-1">
+        <div class="badge badge-xs xs:badge-sm" role="img" aria-label="Insignia desbloqueada: Descubre el Edén">
+          <div class="ring"></div><div class="inner"></div>
+          <div class="content"><img src="assets/icons/tree.svg" width="40" height="40" alt="" class="px px-shadow"><span class="pix hidden text-[8px] leading-[1.4] xs:block">Descubre<br>el Edén</span></div>
+        </div>
+        <div><h3 class="mt-2 text-[21px] leading-tight"><span class="pix block text-[12px]">MUNDO 1</span>Descubre el Edén</h3>
+        <p class="mt-1.5 text-[16px] leading-snug xs:max-w-[260px]">Expedición piloto en Villahermosa.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Más parques y duraciones</h3><p class="mt-1.5 text-[16px] leading-snug">Nuevas expediciones en otros espacios.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Nuevas misiones</h3><p class="mt-1.5 text-[16px] leading-snug">Solo las que la IA valide bien.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Bitácora de naturaleza</h3><p class="mt-1.5 text-[16px] leading-snug">Tus hallazgos, guardados en tu teléfono.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Descripciones breves</h3><p class="mt-1.5 text-[16px] leading-snug">Un modelo multimodal abierto que describa tus hallazgos.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Modo sin conexión</h3><p class="mt-1.5 text-[16px] leading-snug">Si los teléfonos lo aguantan.</p></div>
+      </li>
+      <li class="flex items-center gap-2 text-left xs:flex-col xs:gap-0 xs:text-center">
+        <div class="badge badge-xs xs:badge-sm locked" role="img" aria-label="Nivel bloqueado"><div class="ring"></div><div class="inner"></div><div class="content"><span class="pix text-[20px] leading-none">?</span><span class="pix hidden text-[9px] xs:block">Próxima</span></div></div>
+        <div><h3 class="mt-1 text-[19px] leading-tight">Mapas y rutas abiertas</h3><p class="mt-1.5 text-[16px] leading-snug">Con datos abiertos y verificados.</p></div>
+      </li>
+    </ol>
+    <p class="mt-14 text-[17px] font-bold">¿Tienes una idea de nivel? Propónla en el repo.</p>
+  </div>
+</section>
+
+<!-- ======================= 11 · FAQ ======================= -->
+<section id="faq" class="border-b-4 border-tinta bg-papel py-20 lg:py-28" aria-labelledby="faq-title">
+  <div class="wrap grid gap-12 lg:grid-cols-[360px_1fr] lg:gap-16">
+    <div class="lg:sticky lg:top-32 lg:self-start">
+      <p class="eyebrow">FAQ</p>
+      <h2 id="faq-title" class="h2 mt-6">Preguntas antes de salir.</h2>
+      <img src="assets/icons/eye.svg" width="64" height="64" alt="" class="px px-shadow mt-8 hidden lg:block">
+    </div>
+    <div class="flex flex-col gap-5">
+      <details class="faq"><summary>¿Necesito crear una cuenta?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">No. Sin cuenta, sin correo y sin ubicación precisa. Tu progreso se guarda en tu teléfono.</div></details>
+      <details class="faq"><summary>¿Cuánto cuesta?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">[Por definir]</div></details>
+      <details class="faq"><summary>¿Tengo que instalar algo?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">Está pensada como web móvil: la abres desde el navegador. Instalación como app (PWA): [Por definir].</div></details>
+      <details class="faq"><summary>¿La IA identifica plantas o especies?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">No. Solo estima si tu foto se parece a la categoría de la misión («hoja», «flor visible», «tronco/raíces»). Nunca te dará un nombre científico como verdad.</div></details>
+      <details class="faq"><summary>¿Qué pasa si la IA se equivoca?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">Puedes tomar otra foto o marcar la misión a mano. Si la marcas tú, queda como «Revisión manual · No verificada», a la vista en tu resumen e insignia.</div></details>
+      <details class="faq"><summary>¿Qué hacen con mis fotos?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">Se reducen en tu teléfono, se envían para analizarse y el servidor las descarta después. Puedes borrar tus fotos y todos tus datos locales cuando quieras.</div></details>
+      <details class="faq"><summary>¿Funciona sin internet?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">Por ahora no: el análisis corre en un servidor. Guardar fotos para analizarlas después está en evaluación.</div></details>
+      <details class="faq"><summary>¿Puedo jugar fuera de Villahermosa?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">El piloto está diseñado para el Parque Tomás Garrido Canabal. Las misiones son de cosas comunes en muchos parques, pero no garantizamos que funcionen igual en otros lugares.</div></details>
+      <details class="faq"><summary>¿Mide cuánto caminé o mi tiempo sin pantalla?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">No. Solo muestra el tiempo en sesión, desde que empiezas hasta que terminas la expedición.</div></details>
+      <details class="faq"><summary>¿En qué idioma está?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">[Por definir]</div></details>
+      <details class="faq"><summary>¿Qué modelo usan y con qué licencia?<span class="plus" aria-hidden="true"><img src="assets/icons/plus.svg" width="20" height="20" alt="" class="px"></span></summary><div class="ans">SigLIP2 de pesos abiertos (referencia: <code class="break-all bg-tinta px-1.5 py-px font-mono text-[15px] text-lima">google/siglip2-base-patch16-256</code>). Variante final y licencia de los pesos: [Por definir]; todo queda documentado en el README.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= 12 · CTA FINAL ======================= -->
+<section id="jugar" class="border-b-4 border-tinta bg-lima bg-dots py-20 lg:py-28" aria-labelledby="cta-title">
+  <div class="wrap grid items-center gap-12 lg:grid-cols-[1fr_auto] lg:gap-20">
+    <div>
+      <p class="eyebrow">PRESIONA START</p>
+      <h2 id="cta-title" class="mt-6 text-[48px] leading-[.98] tracking-[-1px] sm:text-[64px] lg:text-[88px] lg:tracking-[-2px]">Tu expedición empieza afuera.</h2>
+      <p class="lead mt-6">Tres misiones, ~20 minutos y un parque esperándote. Lo único que tienes que hacer después es guardar el teléfono.</p>
+      <div class="mt-9 flex flex-col gap-5 xs:flex-row xs:flex-wrap xs:items-center">
+        <!-- TODO: URL de la demo [Por definir] (D1) -->
+        <a class="btn btn-lg min-h-[72px] px-10 text-[24px]" href="#">¡Jugar la demo!</a>
+        <!-- TODO: URL del repositorio GitHub [Por definir] (D2) -->
+        <a class="btn btn-lg btn-sec" href="#">Ver el código</a>
+      </div>
+      <p class="mt-6 flex flex-wrap items-center gap-x-2.5 gap-y-1 text-sm font-bold"><span>Sin cuenta</span><span class="inline-block h-2 w-2 bg-tinta" aria-hidden="true"></span><span>Sin ubicación precisa</span><span class="inline-block h-2 w-2 bg-tinta" aria-hidden="true"></span><span>Fotos borrables</span></p>
+      <p class="mt-8 inline-block -rotate-[1.5deg] bg-tinta px-4 py-2.5 font-display text-[22px] italic text-voltio shadow-[6px_6px_0_#FF3EA5] sm:text-[26px]" lang="en">The Real World Is Your Playground.</p>
+    </div>
+    <div class="flex justify-center">
+      <figure class="badge" role="img" aria-label="Insignia Descubre el Edén, completada">
+        <div class="ring"></div><div class="inner"></div>
+        <div class="content"><img src="assets/icons/tree.svg" width="50" height="50" alt="" class="px px-shadow"><span class="pix text-[11px] leading-[1.4]">Descubre<br>el Edén</span></div>
+        <div class="ribbon">¡COMPLETADA!</div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ======================= 13 · FOOTER ======================= -->
+<footer class="bg-tinta py-16 text-papel" aria-labelledby="footer-title">
+  <div class="wrap">
+    <div class="flex flex-col gap-5 border-b-4 border-papel pb-10 sm:flex-row sm:items-end sm:justify-between">
+      <div class="flex items-center gap-4">
+        <span class="flex h-[60px] w-[60px] items-center justify-center border-3 border-papel bg-lima"><img src="assets/icons/leaf.svg" width="40" height="40" alt="" class="px"></span>
+        <h2 id="footer-title" class="font-pixel text-[26px] font-bold leading-[1.08] [text-shadow:3px_3px_0_#0A5C2B]"><span aria-hidden="true">ECO<br>QUEST</span><span class="sr-only">EcoQuest</span></h2>
+      </div>
+      <p class="font-display text-[22px] italic text-voltio" lang="en">The Real World Is Your Playground.</p>
+    </div>
+    <div class="grid gap-10 py-10 md:grid-cols-3 md:gap-12">
+      <div>
+        <h3 class="pix text-[14px] text-lima">Proyecto</h3>
+        <ul class="mt-4 space-y-3 text-[16px] leading-snug">
+          <li>Hecho por <b>Aarón López Sosa</b> en Villahermosa, Tabasco.</li>
+          <li>Proyecto para el reto semanal <b>Touch Grass</b> de <b>Hacktoberfest 2026</b>.</li>
+          <li>Estado: <b>prototipo en construcción</b>.</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pix text-[14px] text-lima">Créditos y licencias</h3>
+        <ul class="mt-4 space-y-3 text-[16px] leading-snug">
+          <li><b>Modelo:</b> SigLIP2 (<code class="break-all text-[14px] text-lima">google/siglip2-base-patch16-256</code>, variante final [Por definir]) — pesos abiertos publicados por Google en Hugging Face. Licencia: [Por definir].</li>
+          <li><b>Código de EcoQuest:</b> licencia [Por definir].</li>
+          <li><b>Fuentes:</b> Silkscreen, Archivo Black y Space Grotesk — licencias [Por definir: verificar].</li>
+          <li><b>Dependencias:</b> Next.js, Tailwind CSS, shadcn/ui, Transformers y más — lista completa con licencias en el README.</li>
+          <li><b>Servicio de inferencia:</b> [Por definir].</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="pix text-[14px] text-lima">Enlaces</h3>
+        <ul class="mt-4 space-y-3 text-[16px] leading-snug">
+          <!-- TODO: URL de la demo [Por definir] (D1) -->
+          <li><a href="#" class="underline decoration-2 underline-offset-4 hover:text-lima">Demo</a>: [Por definir]</li>
+          <!-- TODO: URL del repositorio GitHub [Por definir] (D2) -->
+          <li><a href="#" class="underline decoration-2 underline-offset-4 hover:text-lima">Repositorio en GitHub</a>: [Por definir]</li>
+          <!-- TODO: URL del README / documentación [Por definir] -->
+          <li><a href="#" class="underline decoration-2 underline-offset-4 hover:text-lima">README / documentación</a>: [Por definir]</li>
+          <li>Hacktoberfest: <a href="https://hacktoberfest.com/" class="break-all text-voltio underline decoration-2 underline-offset-4 hover:text-lima">https://hacktoberfest.com/</a></li>
+          <li>SigLIP2 en Hugging Face: <a href="https://huggingface.co/google/siglip2-base-patch16-256" class="break-all text-voltio underline decoration-2 underline-offset-4 hover:text-lima">https://huggingface.co/google/siglip2-base-patch16-256</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t-4 border-papel pt-8 text-[15px] leading-snug">
+      <p>EcoQuest no está afiliado al Parque Tomás Garrido Canabal ni a las autoridades del parque. Juega con responsabilidad y respeta el reglamento del lugar.</p>
+      <p class="mt-2">Sin cookies de rastreo: [Por definir — confirmar antes de publicar].</p>
+    </div>
+  </div>
+</footer>
+
+<script src="src/main.js" defer></script>
+</body>
+</html>
